@@ -20,11 +20,32 @@ class VersionedFileExtension extends DataObjectDecorator {
 	 * @param FieldSet $fields
 	 */
 	public function updateCMSFields($fields) {
-		if($this->owner instanceof Folder || !$this->owner->canEdit()) return;
+		if($this->owner instanceof Folder) return;
 
-		$fields->addFieldToTab (
-			'BottomRoot.Replace',
-			new FileField('ReplacementFile', 'Select a Replacement File')
+		$fields->addFieldToTab('BottomRoot.History', $versions = new TableListField (
+			'Versions',
+			'FileVersion',
+			array (
+				'VersionNumber' => 'Version Number',
+				'Creator.Name'  => 'Creator',
+				'Created'       => 'Date',
+				'Link'          => 'Link',
+				'IsCurrent'     => 'Is Current'
+			),
+			'"FileID" = ' . $this->owner->ID,
+			'"VersionNumber" DESC'
+		));
+
+		$versions->setFieldFormatting(array (
+			'Link'      => '<a href=\"$URL\">$Name</a>',
+			'IsCurrent' => '{$IsCurrent()->Nice()}',
+			'Created'   => '{$obj(\'Created\')->Nice()}'
+		));
+		$versions->disableSorting();
+		$versions->setPermissions(array());
+
+		if($this->owner->canEdit()) $fields->addFieldToTab (
+			'BottomRoot.Replace', new FileField('ReplacementFile', 'Select a Replacement File')
 		);
 	}
 

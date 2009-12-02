@@ -43,6 +43,27 @@ class FileVersion extends DataObject {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getName() {
+		return basename($this->Filename);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getURL() {
+		return Controller::join_links(Director::baseURL(), $this->Filename);
+	}
+
+	/**
+	 * @return Boolean
+	 */
+	public function IsCurrent() {
+		return DBField::create('Boolean', ($this->File()->CurrentVersionID == $this->ID));
+	}
+
+	/**
 	 * Saves the current version of the linked File object in a _versions directory, then returns the relative path
 	 * to where it is stored.
 	 *
