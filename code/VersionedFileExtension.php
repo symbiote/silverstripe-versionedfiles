@@ -85,7 +85,7 @@ class VersionedFileExtension extends DataObjectDecorator {
 	 *
 	 * @param bool $write
 	 */
-	protected function createVersion($write = true) {
+	public function createVersion($write = true) {
 		$version = new FileVersion();
 		$version->FileID = $this->owner->ID;
 		$version->write();
