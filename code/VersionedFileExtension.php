@@ -10,7 +10,10 @@ class VersionedFileExtension extends DataObjectDecorator {
 	 * @return array
 	 */
 	public function extraStatics() {
-		return array('has_many' => array('Versions' => 'FileVersion'));
+		return array (
+			'has_one'  => array('CurrentVersion' => 'FileVersion'),
+			'has_many' => array('Versions'       => 'FileVersion')
+		);
 	}
 
 	/**
@@ -23,6 +26,15 @@ class VersionedFileExtension extends DataObjectDecorator {
 			'BottomRoot.Replace',
 			new FileField('ReplacementFile', 'Select a Replacement File')
 		);
+	}
+
+	/**
+	 * Get the current file version number, if one is available.
+	 *
+	 * @return int|null
+	 */
+	public function getVersionNumber() {
+		if($this->owner->CurrentVersionID) return $this->owner->CurrentVersion()->VersionNumber;
 	}
 
 	/**
@@ -55,6 +67,9 @@ class VersionedFileExtension extends DataObjectDecorator {
 		$version = new FileVersion();
 		$version->FileID = $this->owner->ID;
 		$version->write();
+
+		$this->owner->CurrentVersionID = $version->ID;
+		$this->owner->write();
 	}
 
 }
