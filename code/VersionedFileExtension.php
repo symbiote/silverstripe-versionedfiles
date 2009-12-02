@@ -29,6 +29,20 @@ class VersionedFileExtension extends DataObjectDecorator {
 	}
 
 	/**
+	 * Creates the initial version when the file is created, or saved for the first time.
+	 */
+	public function onBeforeWrite() {
+		if(!$this->owner->CurrentVersionID) $this->createVersion(false);
+	}
+
+	/**
+	 * Since AssetAdmin does not use {@link onBeforeWrite}, onAfterUpload is also needed.
+	 */
+	public function onAfterUpload() {
+		$this->onBeforeWrite();
+	}
+
+	/**
 	 * Get the current file version number, if one is available.
 	 *
 	 * @return int|null
@@ -63,13 +77,21 @@ class VersionedFileExtension extends DataObjectDecorator {
 		unlink($this->owner->getFullPath());
 		$upload->loadIntoFile($tmpFile, $this->owner, $folder);
 
-		// save versioning information
+		$this->createVersion();
+	}
+
+	/**
+	 * Creates a new file version and sets it as the current version.
+	 *
+	 * @param bool $write
+	 */
+	protected function createVersion($write = true) {
 		$version = new FileVersion();
 		$version->FileID = $this->owner->ID;
 		$version->write();
 
 		$this->owner->CurrentVersionID = $version->ID;
-		$this->owner->write();
+		if($write) $this->owner->write();
 	}
 
 }
