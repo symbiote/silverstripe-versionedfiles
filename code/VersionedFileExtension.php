@@ -22,6 +22,10 @@ class VersionedFileExtension extends DataObjectDecorator {
 	public function updateCMSFields($fields) {
 		if($this->owner instanceof Folder) return;
 
+		$fields->addFieldToTab (
+			'BottomRoot.Main', new ReadonlyField('VersionNumber', 'Current Version'), 'Created'
+		);
+
 		$fields->addFieldToTab('BottomRoot.History', $versions = new TableListField (
 			'Versions',
 			'FileVersion',
