@@ -7,6 +7,13 @@
 class VersionedFileExtension extends DataObjectDecorator {
 
 	/**
+	 * @return array
+	 */
+	public function extraStatics() {
+		return array('has_many' => array('Versions' => 'FileVersion'));
+	}
+
+	/**
 	 * @param FieldSet $fields
 	 */
 	public function updateCMSFields($fields) {
@@ -43,6 +50,11 @@ class VersionedFileExtension extends DataObjectDecorator {
 		// the file must be removed to prevent the upload being renamed
 		unlink($this->owner->getFullPath());
 		$upload->loadIntoFile($tmpFile, $this->owner, $folder);
+
+		// save versioning information
+		$version = new FileVersion();
+		$version->FileID = $this->owner->ID;
+		$version->write();
 	}
 
 }
