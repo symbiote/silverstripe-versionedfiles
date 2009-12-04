@@ -6,6 +6,8 @@
  */
 class VersionedFileExtension extends DataObjectDecorator {
 
+	protected $replacementType;
+
 	/**
 	 * @return array
 	 */
@@ -48,9 +50,26 @@ class VersionedFileExtension extends DataObjectDecorator {
 		$versions->disableSorting();
 		$versions->setPermissions(array());
 
-		if($this->owner->canEdit()) $fields->addFieldToTab (
-			'BottomRoot.Replace', new FileField('ReplacementFile', 'Select a Replacement File')
-		);
+		if($this->owner->canEdit()) {
+			$fields->addFieldToTab('BottomRoot.Replace', new SelectionGroup (
+				'Replace',
+				array (
+					'upload//Upload a New File' => new FieldGroup (
+						new FileField('ReplacementFile', 'Select a Replacement File')
+					),
+					'rollback//Rollback to a Previous Version' => new FieldGroup (
+						new DropdownField (
+							'PreviousVersion',
+							'Select a Previous Version',
+							$versions->sourceItems()->map('VersionNumber'),
+							null,
+							null,
+							'(Select a Version)'
+						)
+					)
+				)
+			));
+		}
 	}
 
 	/**
@@ -77,12 +96,40 @@ class VersionedFileExtension extends DataObjectDecorator {
 	}
 
 	/**
+	 * Handles rolling back to a selected version on save.
+	 *
+	 * @param int $version
+	 * @param Form $form
+	 */
+	public function savePreviousVersion($version, $form) {
+		if($form->dataFieldByName('Replace')->dataValue() != 'rollback' || !is_numeric($version)) return;
+
+		$fileVersion = DataObject::get_one (
+			'FileVersion',
+			sprintf('"FileID" = %d AND "VersionNumber" = %d', $this->owner->ID, $version)
+		);
+
+		if(!$fileVersion) return;
+
+		$versionPath = Controller::join_links(Director::baseFolder(), $fileVersion->Filename);
+		$currentPath = $this->owner->getFullPath();
+
+		if(!copy($versionPath, $currentPath)) {
+			throw new Exception("Could not replace file #{$this->owner->ID} with version #$version.");
+		}
+
+		$this->owner->CurrentVersionID = $fileVersion->ID;
+		$this->owner->write();
+	}
+
+	/**
 	 * Called by the edit form upon save, and handles replacing the file if a replacement is specified.
 	 *
 	 * @param array $tmpFile
+	 * @param Form $form
 	 */
-	public function saveReplacementFile(array $tmpFile) {
-		if($tmpFile['error'] !=  UPLOAD_ERR_OK) return;
+	public function saveReplacementFile(array $tmpFile, $form) {
+		if($form->dataFieldByName('Replace')->dataValue() != 'upload' || $tmpFile['error'] !=  UPLOAD_ERR_OK) return;
 
 		$upload  = new Upload();
 		$tmpFile = array_merge($tmpFile, array('name' => $this->owner->Name));

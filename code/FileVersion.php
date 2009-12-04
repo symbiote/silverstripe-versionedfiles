@@ -45,6 +45,13 @@ class FileVersion extends DataObject {
 	/**
 	 * @return string
 	 */
+	public function getTitle() {
+		return "Version $this->VersionNumber";
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getName() {
 		return basename($this->Filename);
 	}
