@@ -1,6 +1,6 @@
 <?php
 /**
- * @package versionedfiles
+ * @package silverstripe-versionedfiles
  */
 
 Object::add_extension('File', 'VersionedFileExtension');

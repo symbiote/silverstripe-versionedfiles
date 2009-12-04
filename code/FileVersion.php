@@ -3,7 +3,7 @@
  * This class represents a single version of a file. Each file can have many versions, and one of these is currently
  * active at any one time.
  *
- * @package versionedfiles
+ * @package silverstripe-versionedfiles
  */
 class FileVersion extends DataObject {
 

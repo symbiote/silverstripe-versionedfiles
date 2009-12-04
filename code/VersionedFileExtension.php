@@ -2,7 +2,7 @@
 /**
  * An extension that adds the ability to replace files.
  *
- * @package versionedfiles
+ * @package silverstripe-versionedfiles
  */
 class VersionedFileExtension extends DataObjectDecorator {
 
