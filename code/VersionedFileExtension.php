@@ -6,8 +6,6 @@
  */
 class VersionedFileExtension extends DataObjectDecorator {
 
-	protected $replacementType;
-
 	/**
 	 * @return array
 	 */
