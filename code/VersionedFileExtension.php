@@ -97,10 +97,9 @@ class VersionedFileExtension extends DataObjectDecorator {
 	 * Handles rolling back to a selected version on save.
 	 *
 	 * @param int $version
-	 * @param Form $form
 	 */
-	public function savePreviousVersion($version, $form) {
-		if($form->dataFieldByName('Replace')->dataValue() != 'rollback' || !is_numeric($version)) return;
+	public function savePreviousVersion($version) {
+		if(Controller::curr()->getRequest()->requestVar('Replace') != 'rollback' || !is_numeric($version)) return;
 
 		$fileVersion = DataObject::get_one (
 			'FileVersion',
@@ -124,10 +123,9 @@ class VersionedFileExtension extends DataObjectDecorator {
 	 * Called by the edit form upon save, and handles replacing the file if a replacement is specified.
 	 *
 	 * @param array $tmpFile
-	 * @param Form $form
 	 */
-	public function saveReplacementFile(array $tmpFile, $form) {
-		if($form->dataFieldByName('Replace')->dataValue() != 'upload' || $tmpFile['error'] !=  UPLOAD_ERR_OK) return;
+	public function saveReplacementFile(array $tmpFile) {
+		if(Controller::curr()->getRequest()->requestVar('Replace') != 'upload' || $tmpFile['error'] !=  UPLOAD_ERR_OK) return;
 
 		$upload  = new Upload();
 		$tmpFile = array_merge($tmpFile, array('name' => $this->owner->Name));
