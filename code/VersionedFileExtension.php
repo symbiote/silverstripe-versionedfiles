@@ -74,7 +74,7 @@ class VersionedFileExtension extends DataObjectDecorator {
 	 * Creates the initial version when the file is created, or saved for the first time.
 	 */
 	public function onBeforeWrite() {
-		if(!$this->owner->CurrentVersionID) $this->createVersion(false);
+		if(!$this->owner instanceof Folder && !$this->owner->CurrentVersionID) $this->createVersion(false);
 	}
 
 	/**
