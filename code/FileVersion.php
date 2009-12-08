@@ -49,19 +49,23 @@ class FileVersion extends DataObject {
 		return "Version $this->VersionNumber";
 	}
 
-	/**
+	/**#@+
 	 * @return string
 	 */
+
 	public function getName() {
 		return basename($this->Filename);
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getURL() {
 		return Controller::join_links(Director::baseURL(), $this->Filename);
 	}
+
+	public function getFullPath() {
+		return Director::baseFolder() . $this->Filename;
+	}
+
+	/**#@-*/
 
 	/**
 	 * @return Boolean
