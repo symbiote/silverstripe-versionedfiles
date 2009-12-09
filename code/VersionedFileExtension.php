@@ -154,6 +154,8 @@ class VersionedFileExtension extends DataObjectDecorator {
 	 * @param bool $write
 	 */
 	public function createVersion() {
+		if(!file_exists($this->owner->getFullPath())) return;
+
 		$version = new FileVersion();
 		$version->FileID = $this->owner->ID;
 		$version->write();
