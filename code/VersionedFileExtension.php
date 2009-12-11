@@ -23,22 +23,25 @@ class VersionedFileExtension extends DataObjectDecorator {
 		if($this->owner instanceof Folder) return;
 
 		$fields->addFieldToTab (
-			'BottomRoot.Main', new ReadonlyField('VersionNumber', 'Current Version'), 'Created'
+			'BottomRoot.Main',
+			new ReadonlyField('VersionNumber', _t('VersionedFiles.CURRENTVERSION', 'Current Version')),
+			'Created'
 		);
 
 		$fields->addFieldToTab('BottomRoot.History', $versions = new TableListField (
 			'Versions',
 			'FileVersion',
 			array (
-				'VersionNumber' => 'Version Number',
-				'Creator.Name'  => 'Creator',
-				'Created'       => 'Date',
-				'Link'          => 'Link',
-				'IsCurrent'     => 'Is Current'
+				'VersionNumber' => _t('VersionedFiles.VERSIONNUMBER', 'Version Number'),
+				'Creator.Name'  => _t('VersionedFiles.CREATOR', 'Creator'),
+				'Created'       => _t('VersionedFiles.DATE', 'Date'),
+				'Link'          => _t('VersionedFiles.LINK', 'Link'),
+				'IsCurrent'     => _t('VersionedFiles.ISCURRENT', 'Is Current')
 			),
 			'"FileID" = ' . $this->owner->ID,
 			'"VersionNumber" DESC'
 		));
+		$fields->fieldByName('BottomRoot.History')->setTitle(_t('VersionedFiles.HISTORY', 'History'));
 
 		$versions->setFieldFormatting(array (
 			'Link'      => '<a href=\"$URL\">$Name</a>',
@@ -49,24 +52,31 @@ class VersionedFileExtension extends DataObjectDecorator {
 		$versions->setPermissions(array());
 
 		if($this->owner->canEdit()) {
+			$uploadMsg   = _t('VersionedFiles.ROLLBACKPREVVERSION', 'Rollback to a Previous Version');
+			$rollbackMsg = _t('VersionedFiles.UPLOADNEWFILE', 'Upload a New File');
+
 			$fields->addFieldToTab('BottomRoot.Replace', new SelectionGroup (
 				'Replace',
 				array (
-					'upload//Upload a New File' => new FieldGroup (
-						new FileField('ReplacementFile', 'Select a Replacement File')
+					"upload//$uploadMsg" => new FieldGroup (
+						new FileField (
+							'ReplacementFile',
+							_t('VersionedFiles.SELECTREPLACEMENTFILE', 'Select a Replacement File')
+						)
 					),
-					'rollback//Rollback to a Previous Version' => new FieldGroup (
+					"rollback//$rollbackMsg" => new FieldGroup (
 						new DropdownField (
 							'PreviousVersion',
-							'Select a Previous Version',
+							_t('VersionedFiles.SELECTPREVVERSION', 'Select a Previous Version'),
 							$versions->sourceItems()->map('VersionNumber'),
 							null,
 							null,
-							'(Select a Version)'
+							_t('VersionedFiles.SELECTAVERSION', '(Select a Version)')
 						)
 					)
 				)
 			));
+			$fields->fieldByName('BottomRoot.Replace')->setTitle(_t('VersionedFiles.REPLACE', 'Replace'));
 		}
 	}
 
