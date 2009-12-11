@@ -19,7 +19,7 @@ class VersionedFileTest extends FunctionalTest {
 		$this->folder->write();
 
 		$file = $this->folder->getFullPath() . 'test-file.txt';
-		file_put_contents($file, md5('first-version'));
+		file_put_contents($file, 'first-version');
 
 		$this->file = new File();
 		$this->file->ParentID = $this->folder->ID;
@@ -30,8 +30,8 @@ class VersionedFileTest extends FunctionalTest {
 	public function tearDown() {
 		parent::tearDown();
 
+		$this->folder->deleteDatabaseOnly();
 		Filesystem::removeFolder($this->folder->getFullPath());
-		$this->folder->delete();
 	}
 
 	public function testInitialSaveCreatesVersion() {
@@ -39,34 +39,55 @@ class VersionedFileTest extends FunctionalTest {
 
 		$this->assertEquals(1, $this->file->getVersionNumber(), 'Files have initial versions vreated.');
 		$this->assertEquals (
-			md5('first-version'),
+			'first-version',
 			file_get_contents($this->file->CurrentVersion()->getFullPath()),
 			'Files are copied to a stored version directory.'
 		);
 	}
-	public function testUploadReplacesFile() {
-		$this->markTestIncomplete('ComplexTableField is currently not testable.');
 
-		$this->logInWithPermssion('ADMIN');
-		$this->getFileEditForm();
-	}
+	public function testNewVersionIncrementsVersionNumber() {
+		file_put_contents($this->file->getFullPath(), 'second-version');
+		$this->file->createVersion();
+		$this->assertEquals (
+			2, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber(), 'The version number has incremented.'
+		);
 
-	public function testUploadCreatesVersion() {
-		$this->markTestIncomplete('ComplexTableField is currently not testable.');
-
-		$this->logInWithPermssion('ADMIN');
-		$this->getFileEditForm();
+		file_put_contents($this->file->getFullPath(), 'third-version');
+		$this->file->createVersion();
+		$this->assertEquals (
+			3, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber(), 'The version number has incremented.'
+		);
 	}
 
 	public function testRollbackReplacesFile() {
-		$this->markTestIncomplete('ComplexTableField is currently not testable.');
+		file_put_contents($this->file->getFullPath(), 'second-version');
+		$this->file->createVersion();
 
 		$this->logInWithPermssion('ADMIN');
 		$this->getFileEditForm();
+
+		$this->assertEquals('second-version', file_get_contents($this->file->CurrentVersion()->getFullPath()));
+
+		$form = $this->mainSession->lastPage()->getFormById('ComplexTableField_Popup_DetailForm');
+		$url  = Director::makeRelative($form->getAction()->asString());
+		$data = array();
+
+		foreach($form->_widgets as $widget) {
+			$data[$widget->getName()] = $widget->getValue();
+		}
+
+		$this->post($url, array_merge($data, array (
+			'Replace'         => 'rollback',
+			'PreviousVersion' => 1,
+			'ReplacementFile' => array(),
+		)));
+
+		$this->assertEquals('first-version', file_get_contents($this->file->getFullPath()));
+		$this->assertEquals(1, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber());
 	}
 
 	protected function getFileEditForm() {
-		ob_start();
+		Form::disable_all_security_tokens();
 
 		$admin  = new AssetAdmin();
 		$folder = Controller::join_links($admin->Link(), 'show', $this->folder->ID);
@@ -74,8 +95,6 @@ class VersionedFileTest extends FunctionalTest {
 
 		$this->get($folder);
 		$this->get($file);
-
-		ob_end_clean();
 	}
 
 }
