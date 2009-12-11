@@ -51,33 +51,34 @@ class VersionedFileExtension extends DataObjectDecorator {
 		$versions->disableSorting();
 		$versions->setPermissions(array());
 
-		if($this->owner->canEdit()) {
-			$uploadMsg   = _t('VersionedFiles.ROLLBACKPREVVERSION', 'Rollback to a Previous Version');
-			$rollbackMsg = _t('VersionedFiles.UPLOADNEWFILE', 'Upload a New File');
+		if(!$this->owner->canEdit()) return;
 
-			$fields->addFieldToTab('BottomRoot.Replace', new SelectionGroup (
-				'Replace',
-				array (
-					"upload//$uploadMsg" => new FieldGroup (
-						new FileField (
-							'ReplacementFile',
-							_t('VersionedFiles.SELECTREPLACEMENTFILE', 'Select a Replacement File')
-						)
-					),
-					"rollback//$rollbackMsg" => new FieldGroup (
-						new DropdownField (
-							'PreviousVersion',
-							_t('VersionedFiles.SELECTPREVVERSION', 'Select a Previous Version'),
-							$versions->sourceItems()->map('VersionNumber'),
-							null,
-							null,
-							_t('VersionedFiles.SELECTAVERSION', '(Select a Version)')
-						)
-					)
-				)
-			));
-			$fields->fieldByName('BottomRoot.Replace')->setTitle(_t('VersionedFiles.REPLACE', 'Replace'));
+		$uploadMsg   = _t('VersionedFiles.UPLOADNEWFILE', 'Upload a New File');
+		$rollbackMsg = _t('VersionedFiles.ROLLBACKPREVVERSION', 'Rollback to a Previous Version');
+
+		$replacementOptions = array("upload//$uploadMsg" => new FileField (
+			'ReplacementFile', _t('VersionedFiles.SELECTREPLACEMENTFILE', 'Select a Replacement File')
+		));
+
+		$versions = $this->owner->Versions (
+			sprintf('"VersionNumber" <> %d', $this->getVersionNumber())
+		);
+
+		if($versions && $versions->Count()) {
+			$replacementOptions["rollback//$rollbackMsg"] = new DropdownField (
+				'PreviousVersion',
+				_t('VersionedFiles.SELECTPREVVERSION', 'Select a Previous Version'),
+				$versions->map('VersionNumber'),
+				null,
+				null,
+				_t('VersionedFiles.SELECTAVERSION', '(Select a Version)')
+			);
 		}
+
+		$fields->addFieldToTab (
+			'BottomRoot.Replace', new SelectionGroup('Replace', $replacementOptions)
+		);
+		$fields->fieldByName('BottomRoot.Replace')->setTitle(_t('VersionedFiles.REPLACE', 'Replace'));
 	}
 
 	/**
