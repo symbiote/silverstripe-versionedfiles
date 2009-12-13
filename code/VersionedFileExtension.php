@@ -123,7 +123,9 @@ class VersionedFileExtension extends DataObjectDecorator {
 		$currentPath = $this->owner->getFullPath();
 
 		if(!copy($versionPath, $currentPath)) {
-			throw new Exception("Could not replace file #{$this->owner->ID} with version #$version.");
+			throw new ValidationException(new ValidationResult (
+				false, "Could not replace file #{$this->owner->ID} with version #$version."
+			));
 		}
 
 		$this->owner->CurrentVersionID = $fileVersion->ID;
@@ -139,22 +141,28 @@ class VersionedFileExtension extends DataObjectDecorator {
 		if(Controller::curr()->getRequest()->requestVar('Replace') != 'upload' || $tmpFile['error'] !=  UPLOAD_ERR_OK) return;
 
 		$upload  = new Upload();
-		$tmpFile = array_merge($tmpFile, array('name' => $this->owner->Name));
 		$folder  = null;
 
 		if($this->owner->ParentID) {
 			$folder = substr($this->owner->Parent()->getRelativePath(), strlen(ASSETS_DIR) + 1, -1);
 		}
 
+		$upload->setAllowedExtensions(array($this->owner->getExtension()));
+
 		if(!$upload->validate($tmpFile)) {
-			throw new Exception (
-				"Could not replace file $file->ID: " . implode(', ', $upload->getErrors())
-			);
+			throw new ValidationException(new ValidationResult (
+				false, "Could not replace '{$this->owner->Name}': " . implode(', ', $upload->getErrors())
+			));
 		}
 
 		// the file must be removed to prevent the upload being renamed
 		unlink($this->owner->getFullPath());
-		$upload->loadIntoFile($tmpFile, $this->owner, $folder);
+
+		$upload->loadIntoFile (
+			array_merge($tmpFile, array('name' => $this->owner->Name)),
+			$this->owner,
+			$folder
+		);
 
 		$this->createVersion();
 	}
