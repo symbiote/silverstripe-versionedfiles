@@ -56,9 +56,9 @@ class VersionedFileExtension extends DataObjectDecorator {
 		$uploadMsg   = _t('VersionedFiles.UPLOADNEWFILE', 'Upload a New File');
 		$rollbackMsg = _t('VersionedFiles.ROLLBACKPREVVERSION', 'Rollback to a Previous Version');
 
-		$replacementOptions = array("upload//$uploadMsg" => new FileField (
-			'ReplacementFile', _t('VersionedFiles.SELECTREPLACEMENTFILE', 'Select a Replacement File')
-		));
+		$replacementOptions = array (
+			"upload//$uploadMsg" => new FileField('ReplacementFile', '')
+		);
 
 		$versions = $this->owner->Versions (
 			sprintf('"VersionNumber" <> %d', $this->getVersionNumber())
@@ -67,7 +67,7 @@ class VersionedFileExtension extends DataObjectDecorator {
 		if($versions && $versions->Count()) {
 			$replacementOptions["rollback//$rollbackMsg"] = new DropdownField (
 				'PreviousVersion',
-				_t('VersionedFiles.SELECTPREVVERSION', 'Select a Previous Version'),
+				'',
 				$versions->map('VersionNumber'),
 				null,
 				null,

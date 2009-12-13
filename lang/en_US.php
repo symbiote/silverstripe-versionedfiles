@@ -22,8 +22,6 @@ $lang['en_US']['VersionedFiles']['LINK'] = 'Link';
 $lang['en_US']['VersionedFiles']['REPLACE'] = 'Replace';
 $lang['en_US']['VersionedFiles']['ROLLBACKPREVVERSION'] = 'Rollback to a Previous Version';
 $lang['en_US']['VersionedFiles']['SELECTAVERSION'] = '(Select a Version)';
-$lang['en_US']['VersionedFiles']['SELECTPREVVERSION'] = 'Select a Previous Version';
-$lang['en_US']['VersionedFiles']['SELECTREPLACEMENTFILE'] = 'Select a Replacement File';
 $lang['en_US']['VersionedFiles']['UPLOADNEWFILE'] = 'Upload a New File';
 $lang['en_US']['VersionedFiles']['VERSIONNUMBER'] = 'Version Number';
 
