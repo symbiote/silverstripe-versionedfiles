@@ -42,6 +42,14 @@ class FileVersion extends DataObject {
 		parent::onBeforeWrite();
 	}
 
+	public function onBeforeDelete() {
+		if(file_exists($this->getFullPath())) {
+			unlink($this->getFullPath());
+		}
+
+		parent::onBeforeDelete();
+	}
+
 	/**
 	 * @return string
 	 */

@@ -95,6 +95,16 @@ class VersionedFileExtension extends DataObjectDecorator {
 		$this->onAfterWrite();
 	}
 
+	public function onBeforeDelete() {
+		$folder = dirname($this->owner->CurrentVersion()->getFullPath());
+
+		if($versions = $this->owner->Versions()) {
+			foreach($versions as $version) $version->delete();
+		}
+
+		if(is_dir($folder)) Filesystem::removeFolder($folder);
+	}
+
 	/**
 	 * Get the current file version number, if one is available.
 	 *
