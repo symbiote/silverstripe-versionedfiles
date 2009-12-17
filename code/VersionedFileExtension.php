@@ -106,12 +106,33 @@ class VersionedFileExtension extends DataObjectDecorator {
 	}
 
 	/**
-	 * Get the current file version number, if one is available.
-	 *
-	 * @return int|null
+	 * @return int
 	 */
 	public function getVersionNumber() {
 		if($this->owner->CurrentVersionID) return $this->owner->CurrentVersion()->VersionNumber;
+	}
+
+	/**
+	 * @param int $version
+	 */
+	public function setVersionNumber($version) {
+		$fileVersion = DataObject::get_one (
+			'FileVersion',
+			sprintf('"FileID" = %d AND "VersionNumber" = %d', $this->owner->ID, $version)
+		);
+
+		if(!$fileVersion) {
+			throw new Exception("Could not get version #$version of file #{$this->owner->ID}");
+		}
+
+		$versionPath = Controller::join_links(Director::baseFolder(), $fileVersion->Filename);
+		$currentPath = $this->owner->getFullPath();
+
+		if(!copy($versionPath, $currentPath)) {
+			throw new Exception("Could not replace file #{$this->owner->ID} with version #$version.");
+		}
+
+		$this->owner->CurrentVersionID = $fileVersion->ID;
 	}
 
 	/**
@@ -122,24 +143,14 @@ class VersionedFileExtension extends DataObjectDecorator {
 	public function savePreviousVersion($version) {
 		if(Controller::curr()->getRequest()->requestVar('Replace') != 'rollback' || !is_numeric($version)) return;
 
-		$fileVersion = DataObject::get_one (
-			'FileVersion',
-			sprintf('"FileID" = %d AND "VersionNumber" = %d', $this->owner->ID, $version)
-		);
-
-		if(!$fileVersion) return;
-
-		$versionPath = Controller::join_links(Director::baseFolder(), $fileVersion->Filename);
-		$currentPath = $this->owner->getFullPath();
-
-		if(!copy($versionPath, $currentPath)) {
+		try {
+			$this->setVersionNumber($version);
+			$this->owner->write();
+		} catch(Exception $e) {
 			throw new ValidationException(new ValidationResult (
 				false, "Could not replace file #{$this->owner->ID} with version #$version."
 			));
 		}
-
-		$this->owner->CurrentVersionID = $fileVersion->ID;
-		$this->owner->write();
 	}
 
 	/**
