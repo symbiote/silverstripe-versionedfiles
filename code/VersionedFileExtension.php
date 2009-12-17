@@ -56,9 +56,14 @@ class VersionedFileExtension extends DataObjectDecorator {
 		$uploadMsg   = _t('VersionedFiles.UPLOADNEWFILE', 'Upload a New File');
 		$rollbackMsg = _t('VersionedFiles.ROLLBACKPREVVERSION', 'Rollback to a Previous Version');
 
-		$replacementOptions = array (
-			"upload//$uploadMsg" => new FileField('ReplacementFile', '')
-		);
+		$sameTypeMessage = sprintf(_t (
+			'VersionedFiles.SAMETYPEMESSAGE', 'You may only replace this file with another of the same type: .%s'
+		), $this->owner->getExtension());
+
+		$replacementOptions = array("upload//$uploadMsg" => new FieldGroup (
+			new LiteralField('SameTypeMessage', '<p>' . $sameTypeMessage . '</p>'),
+			new FileField('ReplacementFile', '')
+		));
 
 		$versions = $this->owner->Versions (
 			sprintf('"VersionNumber" <> %d', $this->getVersionNumber())
