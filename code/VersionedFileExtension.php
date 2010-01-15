@@ -101,13 +101,21 @@ class VersionedFileExtension extends DataObjectDecorator {
 	}
 
 	public function onBeforeDelete() {
-		$folder = dirname($this->owner->CurrentVersion()->getFullPath());
+		$currentVersion = $this->owner->CurrentVersion();
 
-		if($versions = $this->owner->Versions()) {
-			foreach($versions as $version) $version->delete();
+		// make sure there actually is a current version, otherwise we're going
+		// to end up deleting a bunch of incorrect stuff!
+		if ($currentVersion && $currentVersion->ID > 0) {
+			$folder = dirname($this->owner->CurrentVersion()->getFullPath());
+
+			if($versions = $this->owner->Versions()) {
+				foreach($versions as $version) {
+					$version->delete();
+				}
+			}
+
+			if(is_dir($folder)) Filesystem::removeFolder($folder);
 		}
-
-		if(is_dir($folder)) Filesystem::removeFolder($folder);
 	}
 
 	/**
