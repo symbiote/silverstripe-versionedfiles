@@ -7,6 +7,8 @@
  */
 class FileVersion extends DataObject {
 
+	const VERSION_FOLDER = '.versions';
+
 	public static $db = array (
 		'VersionNumber' => 'Int',
 		'Filename'      => 'Varchar(255)'
@@ -83,7 +85,7 @@ class FileVersion extends DataObject {
 	}
 
 	/**
-	 * Saves the current version of the linked File object in a _versions directory, then returns the relative path
+	 * Saves the current version of the linked File object in a versions directory, then returns the relative path
 	 * to where it is stored.
 	 *
 	 * @return string
@@ -91,11 +93,11 @@ class FileVersion extends DataObject {
 	protected function saveCurrentVersion() {
 		if($this->File()->ParentID) {
 			$base = Controller::join_links (
-				$this->File()->Parent()->getFullPath(), '_versions', $this->FileID
+				$this->File()->Parent()->getFullPath(), self::VERSION_FOLDER, $this->FileID
 			);
 		} else {
 			$base = Controller::join_links (
-				Director::baseFolder(), ASSETS_DIR, '_versions', $this->FileID
+				Director::baseFolder(), ASSETS_DIR, self::VERSION_FOLDER, $this->FileID
 			);
 		}
 
