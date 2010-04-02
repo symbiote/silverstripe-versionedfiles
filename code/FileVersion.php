@@ -7,7 +7,7 @@
  */
 class FileVersion extends DataObject {
 
-	const VERSION_FOLDER = '.versions';
+	const VERSION_FOLDER = '_versions';
 
 	public static $db = array (
 		'VersionNumber' => 'Int',
