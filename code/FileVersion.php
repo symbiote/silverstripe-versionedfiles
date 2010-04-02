@@ -1,7 +1,7 @@
 <?php
 /**
- * This class represents a single version of a file. Each file can have many versions, and one of these is currently
- * active at any one time.
+ * This class represents a single version of a file. Each file can have many
+ * versions, and one of these is currently active at any one time.
  *
  * @package silverstripe-versionedfiles
  */
@@ -20,7 +20,8 @@ class FileVersion extends DataObject {
 	);
 
 	/**
-	 * Saves version meta-data, and generates the saved file version on first write.
+	 * Saves version meta-data, and generates the saved file version on first
+	 * write.
 	 */
 	public function onBeforeWrite() {
 		if(!$this->isInDB()) {
@@ -28,7 +29,9 @@ class FileVersion extends DataObject {
 		}
 
 		if(!$this->VersionNumber) {
-			$versions = DataObject::get('FileVersion', sprintf('"FileID" = %d', $this->FileID));
+			$versions = DataObject::get(
+				'FileVersion', sprintf('"FileID" = %d', $this->FileID)
+			);
 
 			if($versions) {
 				$this->VersionNumber = $versions->Count() + 1;
@@ -61,45 +64,57 @@ class FileVersion extends DataObject {
 		);
 	}
 
-	/**#@+
+	/**
 	 * @return string
 	 */
-
 	public function getName() {
 		return basename($this->Filename);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getURL() {
 		return Controller::join_links(Director::baseURL(), $this->Filename);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getFullPath() {
 		return Director::baseFolder() . $this->Filename;
 	}
 
-	/**#@-*/
-
 	/**
+	 * Returns a Boolean object indicating if this version is currently active.
+	 *
 	 * @return Boolean
 	 */
 	public function IsCurrent() {
-		return DBField::create('Boolean', ($this->File()->CurrentVersionID == $this->ID));
+		return DBField::create(
+			'Boolean', ($this->File()->CurrentVersionID == $this->ID)
+		);
 	}
 
 	/**
-	 * Saves the current version of the linked File object in a versions directory, then returns the relative path
-	 * to where it is stored.
+	 * Saves the current version of the linked File object in a versions
+	 * directory, then returns the relative path to where it is stored.
 	 *
 	 * @return string
 	 */
 	protected function saveCurrentVersion() {
 		if($this->File()->ParentID) {
-			$base = Controller::join_links (
-				$this->File()->Parent()->getFullPath(), self::VERSION_FOLDER, $this->FileID
+			$base = Controller::join_links(
+				$this->File()->Parent()->getFullPath(),
+				self::VERSION_FOLDER,
+				$this->FileID
 			);
 		} else {
-			$base = Controller::join_links (
-				Director::baseFolder(), ASSETS_DIR, self::VERSION_FOLDER, $this->FileID
+			$base = Controller::join_links(
+				Director::baseFolder(),
+				ASSETS_DIR,
+				self::VERSION_FOLDER,
+				$this->FileID
 			);
 		}
 
@@ -109,10 +124,14 @@ class FileVersion extends DataObject {
 		$basename  = basename($this->File()->Name, $extension);
 		$version   = $this->VersionNumber;
 
-		$cachedPath = Controller::join_links($base, "{$basename}$version.$extension");
+		$cachedPath = Controller::join_links(
+			$base,"{$basename}$version.$extension"
+		);
 
 		if(!copy($this->File()->getFullPath(), $cachedPath)) {
-			throw new Exception("Unable to save version #$version of file #$this->FileID.");
+			throw new Exception(
+				"Unable to save version #$version of file #$this->FileID."
+			);
 		}
 
 		return Director::makeRelative($cachedPath);

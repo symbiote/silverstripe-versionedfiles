@@ -7,8 +7,14 @@ class VersionedFileTest extends FunctionalTest {
 
 	protected $usesDatabase = true;
 
+	/**
+	 * @var Folder
+	 */
 	protected $folder;
 
+	/**
+	 * @var File
+	 */
 	protected $file;
 
 	public function setUp() {
@@ -35,10 +41,17 @@ class VersionedFileTest extends FunctionalTest {
 	}
 
 	public function testInitialSaveCreatesVersion() {
-		$this->assertNull($this->folder->CurrentVersionID, 'Folders do not have versions created.');
+		$this->assertNull(
+			$this->folder->CurrentVersionID,
+			'Folders do not have versions created.'
+		);
 
-		$this->assertEquals(1, $this->file->getVersionNumber(), 'Files have initial versions vreated.');
-		$this->assertEquals (
+		$this->assertEquals(
+			1, $this->file->getVersionNumber(),
+			'Files have initial versions vreated.'
+		);
+
+		$this->assertEquals(
 			'first-version',
 			file_get_contents($this->file->CurrentVersion()->getFullPath()),
 			'Files are copied to a stored version directory.'
@@ -48,14 +61,16 @@ class VersionedFileTest extends FunctionalTest {
 	public function testNewVersionIncrementsVersionNumber() {
 		file_put_contents($this->file->getFullPath(), 'second-version');
 		$this->file->createVersion();
-		$this->assertEquals (
-			2, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber(), 'The version number has incremented.'
+		$this->assertEquals(
+			2, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber(),
+			'The version number has incremented.'
 		);
 
 		file_put_contents($this->file->getFullPath(), 'third-version');
 		$this->file->createVersion();
-		$this->assertEquals (
-			3, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber(), 'The version number has incremented.'
+		$this->assertEquals(
+			3, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber(),
+			'The version number has incremented.'
 		);
 	}
 
@@ -66,7 +81,10 @@ class VersionedFileTest extends FunctionalTest {
 		$this->logInWithPermssion('ADMIN');
 		$this->getFileEditForm();
 
-		$this->assertEquals('second-version', file_get_contents($this->file->CurrentVersion()->getFullPath()));
+		$this->assertEquals(
+			'second-version',
+			file_get_contents($this->file->CurrentVersion()->getFullPath())
+		);
 
 		$form = $this->mainSession->lastPage()->getFormById('ComplexTableField_Popup_DetailForm');
 		$url  = Director::makeRelative($form->getAction()->asString());
@@ -82,16 +100,24 @@ class VersionedFileTest extends FunctionalTest {
 			'ReplacementFile' => array(),
 		)));
 
-		$this->assertEquals('first-version', file_get_contents($this->file->getFullPath()));
-		$this->assertEquals(1, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber());
+		$this->assertEquals(
+			'first-version', file_get_contents($this->file->getFullPath())
+		);
+		$this->assertEquals(
+			1, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber()
+		);
 	}
 
 	protected function getFileEditForm() {
 		Form::disable_all_security_tokens();
 
 		$admin  = new AssetAdmin();
-		$folder = Controller::join_links($admin->Link(), 'show', $this->folder->ID);
-		$file   = Controller::join_links($admin->Link(), 'EditForm/field/Files/item', $this->file->ID, 'edit');
+		$folder = Controller::join_links(
+			$admin->Link(), 'show', $this->folder->ID
+		);
+		$file = Controller::join_links(
+			$admin->Link(), 'EditForm/field/Files/item', $this->file->ID, 'edit'
+		);
 
 		$this->get($folder);
 		$this->get($file);

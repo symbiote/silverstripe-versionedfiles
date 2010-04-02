@@ -1,6 +1,7 @@
 <?php
 /**
- * An extension that adds the ability to replace files.
+ * An extension that adds the ability to replace files with new uploads, and
+ * view and roll back to existing versions.
  *
  * @package silverstripe-versionedfiles
  */
@@ -22,13 +23,12 @@ class VersionedFileExtension extends DataObjectDecorator {
 	public function updateCMSFields($fields) {
 		if($this->owner instanceof Folder) return;
 
-		$fields->addFieldToTab (
-			'BottomRoot.Main',
-			new ReadonlyField('VersionNumber', _t('VersionedFiles.CURRENTVERSION', 'Current Version')),
-			'Created'
-		);
+		$fields->addFieldToTab('BottomRoot.Main', new ReadonlyField(
+			'VersionNumber',
+			_t('VersionedFiles.CURRENTVERSION', 'Current Version')
+		), 'Created');
 
-		$fields->addFieldToTab('BottomRoot.History', $versions = new TableListField (
+		$fields->addFieldToTab('BottomRoot.History', $versions = new TableListField(
 			'Versions',
 			'FileVersion',
 			array (
@@ -41,7 +41,9 @@ class VersionedFileExtension extends DataObjectDecorator {
 			'"FileID" = ' . $this->owner->ID,
 			'"VersionNumber" DESC'
 		));
-		$fields->fieldByName('BottomRoot.History')->setTitle(_t('VersionedFiles.HISTORY', 'History'));
+
+		$history = $fields->fieldByName('BottomRoot.History');
+		$history->setTitle(_t('VersionedFiles.HISTORY', 'History'));
 
 		$versions->setFieldFormatting(array (
 			'Link'      => '<a href=\"$URL\">$Name</a>',
@@ -54,10 +56,14 @@ class VersionedFileExtension extends DataObjectDecorator {
 		if(!$this->owner->canEdit()) return;
 
 		$uploadMsg   = _t('VersionedFiles.UPLOADNEWFILE', 'Upload a New File');
-		$rollbackMsg = _t('VersionedFiles.ROLLBACKPREVVERSION', 'Rollback to a Previous Version');
+		$rollbackMsg = _t(
+			'VersionedFiles.ROLLBACKPREVVERSION',
+			'Rollback to a Previous Version'
+		);
 
-		$sameTypeMessage = sprintf(_t (
-			'VersionedFiles.SAMETYPEMESSAGE', 'You may only replace this file with another of the same type: .%s'
+		$sameTypeMessage = sprintf(_t(
+			'VersionedFiles.SAMETYPEMESSAGE',
+			'You may only replace this file with another of the same type: .%s'
 		), $this->owner->getExtension());
 
 		$replacementOptions = array("upload//$uploadMsg" => new FieldGroup (
@@ -83,23 +89,33 @@ class VersionedFileExtension extends DataObjectDecorator {
 		$fields->addFieldToTab (
 			'BottomRoot.Replace', new SelectionGroup('Replace', $replacementOptions)
 		);
-		$fields->fieldByName('BottomRoot.Replace')->setTitle(_t('VersionedFiles.REPLACE', 'Replace'));
+
+		$replace = $fields->fieldByName('BottomRoot.Replace');
+		$replace->setTitle(_t('VersionedFiles.REPLACE', 'Replace'));
 	}
 
 	/**
 	 * Creates the initial version when the file is created.
 	 */
 	public function onAfterWrite() {
-		if(!$this->owner instanceof Folder && !$this->owner->CurrentVersionID) $this->createVersion();
+		if(!$this->owner instanceof Folder && !$this->owner->CurrentVersionID) {
+			$this->createVersion();
+		}
 	}
 
 	/**
-	 * Since AssetAdmin does not use {@link onBeforeWrite}, onAfterUpload is also needed.
+	 * Since AssetAdmin does not use {@link onBeforeWrite}, onAfterUpload is
+	 * also needed.
+	 *
+	 * @uses onAfterWrite()
 	 */
 	public function onAfterUpload() {
 		$this->onAfterWrite();
 	}
 
+	/**
+	 * Deletes all saved version of the file as well as the file itself.
+	 */
 	public function onBeforeDelete() {
 		$currentVersion = $this->owner->CurrentVersion();
 
@@ -129,20 +145,25 @@ class VersionedFileExtension extends DataObjectDecorator {
 	 * @param int $version
 	 */
 	public function setVersionNumber($version) {
-		$fileVersion = DataObject::get_one (
-			'FileVersion',
-			sprintf('"FileID" = %d AND "VersionNumber" = %d', $this->owner->ID, $version)
-		);
+		$fileVersion = DataObject::get_one('FileVersion', sprintf(
+			'"FileID" = %d AND "VersionNumber" = %d', $this->owner->ID, $version
+		));
 
 		if(!$fileVersion) {
-			throw new Exception("Could not get version #$version of file #{$this->owner->ID}");
+			throw new Exception(
+				"Could not get version #$version of file #{$this->owner->ID}"
+			);
 		}
 
-		$versionPath = Controller::join_links(Director::baseFolder(), $fileVersion->Filename);
+		$versionPath = Controller::join_links(
+			Director::baseFolder(), $fileVersion->Filename
+		);
 		$currentPath = $this->owner->getFullPath();
 
 		if(!copy($versionPath, $currentPath)) {
-			throw new Exception("Could not replace file #{$this->owner->ID} with version #$version.");
+			throw new Exception(
+				"Could not replace file #{$this->owner->ID} with version #$version."
+			);
 		}
 
 		$this->owner->CurrentVersionID = $fileVersion->ID;
@@ -161,13 +182,15 @@ class VersionedFileExtension extends DataObjectDecorator {
 			$this->owner->write();
 		} catch(Exception $e) {
 			throw new ValidationException(new ValidationResult (
-				false, "Could not replace file #{$this->owner->ID} with version #$version."
+				false,
+				"Could not replace file #{$this->owner->ID} with version #$version."
 			));
 		}
 	}
 
 	/**
-	 * Called by the edit form upon save, and handles replacing the file if a replacement is specified.
+	 * Called by the edit form upon save, and handles replacing the file if a
+	 * replacement is specified.
 	 *
 	 * @param array $tmpFile
 	 */
@@ -178,14 +201,21 @@ class VersionedFileExtension extends DataObjectDecorator {
 		$folder  = null;
 
 		if($this->owner->ParentID) {
-			$folder = substr($this->owner->Parent()->getRelativePath(), strlen(ASSETS_DIR) + 1, -1);
+			$folder = substr(
+				$this->owner->Parent()->getRelativePath(),
+				strlen(ASSETS_DIR) + 1,
+				-1
+			);
 		}
 
 		$upload->setAllowedExtensions(array($this->owner->getExtension()));
 
 		if(!$upload->validate($tmpFile)) {
+			$errors = implode(', ', $upload->getErrors());
+
 			throw new ValidationException(new ValidationResult (
-				false, "Could not replace '{$this->owner->Name}': " . implode(', ', $upload->getErrors())
+				false,
+				"Could not replace '{$this->owner->Name}': " . $errors
 			));
 		}
 

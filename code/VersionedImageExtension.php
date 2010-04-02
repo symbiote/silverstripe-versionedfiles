@@ -1,6 +1,7 @@
 <?php
 /**
- * An extension to automatically regenerate all cached/resampled images when an image version is changed.
+ * An extension to automatically regenerate all cached/resampled images when an
+ * image version is changed.
  *
  * @package silverstripe-versionedfiles
  */
@@ -12,16 +13,22 @@ class VersionedImageExtension extends DataObjectDecorator {
 	public function onBeforeWrite() {
 		if(!$this->owner->isChanged('CurrentVersionID')) return;
 
-		$base      = $this->owner->ParentID ? $this->owner->Parent()->getFullPath() : ASSETS_PATH . '/';
-		$resampled = "{$base}_resampled";
+		if($this->owner->ParentID) {
+			$base = $this->owner->Parent()->getFullPath();
+		} else {
+			$base = ASSETS_PATH . '/';
+		}
 
-		if(!is_dir($resampled)) return;
+		if(!is_dir($resampled = "{$base}_resampled")) return;
 
 		$files    = scandir($resampled);
 		$iterator = new ArrayIterator($files);
 		$filter   = new RegexIterator (
 			$iterator,
-			sprintf("/(?<method>[a-zA-Z]+)(?<arguments>[0-9]*)-%s/", preg_quote($this->owner->Name)),
+			sprintf(
+				"/(?<method>[a-zA-Z]+)(?<arguments>[0-9]*)-%s/",
+				preg_quote($this->owner->Name)
+			),
 			RegexIterator::GET_MATCH
 		);
 
@@ -34,8 +41,9 @@ class VersionedImageExtension extends DataObjectDecorator {
 
 			unlink($path);
 
-			// Determine the arguments used to generate an image, and regenerate it. Different methods need different
-			// ways of determining the original arguments used.
+			// Determine the arguments used to generate an image, and regenerate
+			// it. Different methods need different ways of determining the
+			// original arguments used.
 			switch(strtolower($method)) {
 				case 'resizedimage':
 				case 'setsize':
@@ -54,9 +62,13 @@ class VersionedImageExtension extends DataObjectDecorator {
 
 				case 'setratiosize':
 					if(strpos($arguments, $size[0]) === 0) {
-						$this->owner->$method($size[0], substr($arguments, strlen($size[0])));
+						$this->owner->$method(
+							$size[0], substr($arguments, strlen($size[0]))
+						);
 					} else {
-						$this->owner->$method($size[1], substr($arguments, 0, strlen($size[0]) * -1));
+						$this->owner->$method(
+							$size[1], substr($arguments, 0, strlen($size[0]) * -1)
+						);
 					}
 					break;
 

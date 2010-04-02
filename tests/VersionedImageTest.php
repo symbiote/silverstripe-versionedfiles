@@ -47,7 +47,7 @@ class VersionedImageTest extends FunctionalTest {
 		call_user_func_array(array($this->image, $method), $arguments);
 		call_user_func_array(array($this->reference, $method), $arguments);
 
-		$this->assertFileNotEquals (
+		$this->assertFileNotEquals(
 			$this->reference->getFullPath(),
 			$this->image->getFullPath(),
 			'The second image version is different.'
@@ -56,7 +56,7 @@ class VersionedImageTest extends FunctionalTest {
 		$this->image->setVersionNumber(1);
 		$this->image->write();
 
-		$this->assertFileEquals (
+		$this->assertFileEquals(
 			$this->reference->getFullPath(),
 			$this->image->getFullPath(),
 			'The rolled back image is the same as the reference.'
@@ -64,7 +64,7 @@ class VersionedImageTest extends FunctionalTest {
 	}
 
 	public function resampleProvidor() {
-		return array (
+		return array(
 			array('SetSize',      array(50, 50)),
 			array('PaddedImage',  array(500, 200)),
 			array('SetWidth',     array(80)),
