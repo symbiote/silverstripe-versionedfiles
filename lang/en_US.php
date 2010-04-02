@@ -12,7 +12,7 @@ $lang['en_US']['FileVersion']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
-$lang['en_US']['VersionNumber']['VERSIONN'] = 'Version %d';
+$lang['en_US']['VersionNumber']['VERSIONNUM'] = 'Version %d';
 $lang['en_US']['VersionedFiles']['CREATOR'] = 'Creator';
 $lang['en_US']['VersionedFiles']['CURRENTVERSION'] = 'Current Version';
 $lang['en_US']['VersionedFiles']['DATE'] = 'Date';

@@ -56,7 +56,9 @@ class FileVersion extends DataObject {
 	 * @return string
 	 */
 	public function getTitle() {
-		return sprintf(_t('VersionNumber.VERSIONN', "Version %d"), $this->VersionNumber);
+		return sprintf(
+			_t('VersionNumber.VERSIONNUM', "Version %d"), $this->VersionNumber
+		);
 	}
 
 	/**#@+
