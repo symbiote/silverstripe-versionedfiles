@@ -208,7 +208,7 @@ class VersionedFileExtension extends DataObjectDecorator {
 			);
 		}
 
-		$upload->setAllowedExtensions(array($this->owner->getExtension()));
+		$upload->getValidator()->setAllowedExtensions(array($this->owner->getExtension()));
 
 		if(!$upload->validate($tmpFile)) {
 			$errors = implode(', ', $upload->getErrors());
