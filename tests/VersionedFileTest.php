@@ -78,7 +78,7 @@ class VersionedFileTest extends FunctionalTest {
 		file_put_contents($this->file->getFullPath(), 'second-version');
 		$this->file->createVersion();
 
-		$this->logInWithPermssion('ADMIN');
+		$this->logInWithPermission('ADMIN');
 		$this->getFileEditForm();
 
 		$this->assertEquals(
