@@ -26,7 +26,7 @@ class VersionedImageExtension extends DataObjectDecorator {
 		$filter   = new RegexIterator (
 			$iterator,
 			sprintf(
-				"/(?<method>[a-zA-Z]+)(?<arguments>[0-9]*)-%s/",
+				"/([a-zA-Z]+)([0-9]*)-%s/",
 				preg_quote($this->owner->Name)
 			),
 			RegexIterator::GET_MATCH
@@ -36,8 +36,8 @@ class VersionedImageExtension extends DataObjectDecorator {
 		foreach($filter as $cachedImage) {
 			$path      = "$resampled/{$cachedImage[0]}";
 			$size      = getimagesize($path);
-			$method    = $cachedImage['method'];
-			$arguments = $cachedImage['arguments'];
+			$method    = $cachedImage[1];
+			$arguments = $cachedImage[2];
 
 			unlink($path);
 
