@@ -95,11 +95,43 @@ class VersionedFileExtension extends DataObjectDecorator {
 	}
 
 	/**
-	 * Creates the initial version when the file is created.
+	 * Creates the initial version when the file is created, as well as updating
+	 * the version records when the parent file is moved.
 	 */
 	public function onAfterWrite() {
+		$changed = $this->owner->getChangedFields(true, 2);
+
 		if(!$this->owner instanceof Folder && !$this->owner->CurrentVersionID) {
 			$this->createVersion();
+		}
+
+		if (array_key_exists('Filename', $changed)) {
+			$oldDirname = '/' . trim(dirname($changed['Filename']['before']), '/');
+			$newDirname = '/' . trim(dirname($changed['Filename']['after']), '/');
+
+			if ($oldDirname == $newDirname) return;
+
+			// First move the _versions directory across.
+			$versionsDir = FileVersion::VERSION_FOLDER . '/' . $this->owner->ID;
+			$oldVersions = BASE_PATH . $oldDirname . '/' . $versionsDir;
+			$newVersions = BASE_PATH . $newDirname . '/' . $versionsDir;
+
+			if (is_dir($oldVersions)) {
+				if (!is_dir($newVersions)) {
+					mkdir($newVersions, Filesystem::$folder_create_mask, true);
+				}
+
+				rename($oldVersions, $newVersions);
+			}
+
+			// Then update individual version records to point to the new
+			// location.
+			foreach ($this->owner->Versions() as $version) {
+				if (strpos($version->Filename, $oldDirname) === 0) {
+					$version->Filename = $newDirname . substr($version->Filename, strlen($oldDirname));
+					$version->write();
+				}
+			}
 		}
 	}
 
