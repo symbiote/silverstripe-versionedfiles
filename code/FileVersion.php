@@ -91,7 +91,7 @@ class FileVersion extends DataObject {
 	 * @return Boolean
 	 */
 	public function IsCurrent() {
-		return DBField::create(
+		return DBField::create_field(
 			'Boolean', ($this->File()->CurrentVersionID == $this->ID)
 		);
 	}
