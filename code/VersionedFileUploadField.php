@@ -2,6 +2,10 @@
 class VersionedFileUploadField extends UploadField {
 
 
+	/**
+	 * The file to upload a new version of
+	 * @var File
+	 */
 	public $currentVersionFile;
 
 
@@ -82,8 +86,6 @@ class VersionedFileUploadField extends UploadField {
 					$return['error'] = implode(' '.PHP_EOL, $this->upload->getErrors());
 				} else {
 					$file = $this->upload->getFile();
-
-					$file->createVersion();
 
 					// Attach the file to the related record.
 					if ($this->relationAutoSetting) {

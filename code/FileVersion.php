@@ -28,6 +28,8 @@ class FileVersion extends DataObject {
 			$this->CreatorID = Member::currentUserID();
 		}
 
+		$id = $this->ID;
+
 		if(!$this->VersionNumber) {
 			$versions = DataObject::get(
 				'FileVersion', sprintf('"FileID" = %d', $this->FileID)
@@ -39,6 +41,8 @@ class FileVersion extends DataObject {
 				$this->VersionNumber = 1;
 			}
 		}
+
+		$fname = $this->Filename;
 
 		if(!$this->Filename) {
 			$this->Filename = $this->saveCurrentVersion();
