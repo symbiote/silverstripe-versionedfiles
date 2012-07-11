@@ -62,18 +62,13 @@ class VersionedFileExtension extends DataExtension {
 			'Created'   => '{$obj(\'Created\')->Nice()}'
 		));
 
-		// $gridField->setAttribute(
-		// 	'data-url-folder-template', 
-		// 	Controller::join_links($this->Link('show'), '%s')
-		// );
-
-		$fields->addFieldToTab('Root.History', $gridField);
+		// history
 
 		$versions = $this->owner->Versions (
 			sprintf('"VersionNumber" <> %d', $this->getVersionNumber())
 		);
 
-		if($versions && $versions->Count()) {
+		if($versions && $versions->Count() && $this->owner->canEdit()) {
 			$fields->addFieldToTab('Root.History', new HeaderField('RollbackHeader', _t('VersionedFiles.ROLLBACKPREVVERSION', 'Rollback to a Previous Version')));
 			$fields->addFieldToTab('Root.History', new DropdownField (
 				'PreviousVersion',
@@ -85,16 +80,20 @@ class VersionedFileExtension extends DataExtension {
 			));
 		}
 
+		$fields->addFieldToTab('Root.History', $gridField);
 
 		// Replace
+
+		if(!$this->owner->canEdit()) return;
 
 		$folder = $this->owner->Parent();
 		$uploadField = VersionedFileUploadField::create('ReplacementFile', '');
 		$uploadField->setConfig('previewMaxWidth', 40);
 		$uploadField->setConfig('previewMaxHeight', 30);
+		$uploadField->setConfig('maxNumberOfFiles', 1);
 		$uploadField->addExtraClass('ss-assetuploadfield');
 		$uploadField->removeExtraClass('ss-uploadfield');
-		$uploadField->setTemplate('AssetUploadField');
+		$uploadField->setTemplate('VersionedFileUploadField');
 		$uploadField->currentVersionFile = $this->owner; 
 		$uploadField->relationAutoSetting = false;
 
@@ -123,26 +122,7 @@ class VersionedFileExtension extends DataExtension {
 
 		$fields->addFieldToTab('Root.Replace', new LiteralField('SameTypeMessage', "<p>$sameTypeMessage</p>"));
 
-
-		return;
-
-
-		$history = $fields->fieldByName('Root.History');
-		$history->setTitle(_t('VersionedFiles.HISTORY', 'History'));
-
-		// $versions->setFieldFormatting(array (
-		// 	'Link'      => '<a href=\"$URL\">$Name</a>',
-		// 	'IsCurrent' => '{$IsCurrent()->Nice()}',
-		// 	'Created'   => '{$obj(\'Created\')->Nice()}'
-		// ));
-		// $versions->disableSorting();
-		// $versions->setPermissions(array());
-
-		if(!$this->owner->canEdit()) return;
-
-
-
-		
+		return;		
 	}
 
 	/**
