@@ -87,6 +87,8 @@ class VersionedFileUploadField extends UploadField {
 				} else {
 					$file = $this->upload->getFile();
 
+					$file->createVersion();
+
 					// Attach the file to the related record.
 					if ($this->relationAutoSetting) {
 						$this->attachFile($file);

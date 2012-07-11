@@ -42,8 +42,6 @@ class FileVersion extends DataObject {
 			}
 		}
 
-		$fname = $this->Filename;
-
 		if(!$this->Filename) {
 			$this->Filename = $this->saveCurrentVersion();
 		}

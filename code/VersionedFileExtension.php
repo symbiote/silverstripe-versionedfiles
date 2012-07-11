@@ -157,6 +157,10 @@ class VersionedFileExtension extends DataExtension {
 		}
 
 		if (array_key_exists('Filename', $changed)) {
+			if($changed['Filename']['before'] == null){
+				return;
+			}
+
 			$oldDirname = '/' . trim(dirname($changed['Filename']['before']), '/');
 			$newDirname = '/' . trim(dirname($changed['Filename']['after']), '/');
 
@@ -196,6 +200,7 @@ class VersionedFileExtension extends DataExtension {
 		$this->onAfterWrite();
 	}
 
+
 	/**
 	 * Deletes all saved version of the file as well as the file itself.
 	 */
@@ -217,12 +222,14 @@ class VersionedFileExtension extends DataExtension {
 		}
 	}
 
+
 	/**
 	 * @return int
 	 */
 	public function getVersionNumber() {
 		if($this->owner->CurrentVersionID) return $this->owner->CurrentVersion()->VersionNumber;
 	}
+	
 
 	/**
 	 * @param int $version
