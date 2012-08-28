@@ -5,93 +5,117 @@
  *
  * @package silverstripe-versionedfiles
  */
-class VersionedFileExtension extends DataObjectDecorator {
+class VersionedFileExtension extends DataExtension {
 
-	/**
-	 * @return array
-	 */
-	public function extraStatics() {
-		return array (
-			'has_one'  => array('CurrentVersion' => 'FileVersion'),
-			'has_many' => array('Versions'       => 'FileVersion')
-		);
-	}
+	public static $has_one = array('CurrentVersion' => 'FileVersion');
+	public static $has_many = array('Versions'      => 'FileVersion');
 
 	/**
 	 * @param FieldSet $fields
 	 */
-	public function updateCMSFields($fields) {
+	public function updateCMSFields(FieldList $fields) {
 		if($this->owner instanceof Folder || !$this->owner->ID) return;
 
-		$fields->addFieldToTab('BottomRoot.Main', new ReadonlyField(
+		$fields->addFieldToTab('Root.Main', new ReadonlyField(
 			'VersionNumber',
 			_t('VersionedFiles.CURRENTVERSION', 'Current Version')
 		), 'Created');
 
-		$fields->addFieldToTab('BottomRoot.History', $versions = new TableListField(
-			'Versions',
-			'FileVersion',
-			array (
-				'VersionNumber' => _t('VersionedFiles.VERSIONNUMBER', 'Version Number'),
-				'Creator.Name'  => _t('VersionedFiles.CREATOR', 'Creator'),
-				'Created'       => _t('VersionedFiles.DATE', 'Date'),
-				'Link'          => _t('VersionedFiles.LINK', 'Link'),
-				'IsCurrent'     => _t('VersionedFiles.ISCURRENT', 'Is Current')
-			),
-			'"FileID" = ' . $this->owner->ID,
-			'"VersionNumber" DESC'
+
+		// History
+
+		$gridFieldConfig = GridFieldConfig::create()->addComponents(
+			new GridFieldToolbarHeader(),
+			//new GridFieldFilterHeader(),
+			new GridFieldSortableHeader(),
+			new GridFieldDataColumns(),
+			new GridFieldPaginator(15),
+			new GridFieldViewButton(),
+			//new GridFieldDeleteAction(),
+			new GridFieldDetailForm()
+		);
+
+		$gridField = new GridField('Versions', 'Versions', $this->owner->Versions(), $gridFieldConfig);
+		$columns = $gridField->getConfig()->getComponentByType('GridFieldDataColumns');
+		$columns->setDisplayFields(array(
+			'VersionNumber' => _t('VersionedFiles.VERSIONNUMBER', 'Version Number'),
+			'Creator.Name'  => _t('VersionedFiles.CREATOR', 'Creator'),
+			'Created'       => _t('VersionedFiles.DATE', 'Date'),
+			'Link'          => _t('VersionedFiles.LINK', 'Link'),
+			'IsCurrent'     => _t('VersionedFiles.ISCURRENT', 'Is Current')
+		));
+		
+		$columns->setFieldCasting(array(
+			'Created' => 'Date->Nice'
 		));
 
-		$history = $fields->fieldByName('BottomRoot.History');
-		$history->setTitle(_t('VersionedFiles.HISTORY', 'History'));
-
-		$versions->setFieldFormatting(array (
-			'Link'      => '<a href=\"$URL\">$Name</a>',
+		$columns->setFieldFormatting(array (
+			'Link'      => '<a href=\"$URL\" target=\"_blank\">$Name</a>',
 			'IsCurrent' => '{$IsCurrent()->Nice()}',
 			'Created'   => '{$obj(\'Created\')->Nice()}'
 		));
-		$versions->disableSorting();
-		$versions->setPermissions(array());
+
+		// history
+
+		$versions = $this->owner->Versions (
+			sprintf('"VersionNumber" <> %d', $this->getVersionNumber())
+		);
+
+		if($versions && $versions->Count() && $this->owner->canEdit()) {
+			$fields->addFieldToTab('Root.History', new HeaderField('RollbackHeader', _t('VersionedFiles.ROLLBACKPREVVERSION', 'Rollback to a Previous Version')));
+			$fields->addFieldToTab('Root.History', new DropdownField (
+				'PreviousVersion',
+				'',
+				$versions->map('VersionNumber'),
+				null,
+				null,
+				_t('VersionedFiles.SELECTAVERSION', '(Select a Version)')	
+			));
+		}
+
+		$fields->addFieldToTab('Root.History', $gridField);
+
+		// Replace
 
 		if(!$this->owner->canEdit()) return;
 
-		$uploadMsg   = _t('VersionedFiles.UPLOADNEWFILE', 'Upload a New File');
-		$rollbackMsg = _t(
-			'VersionedFiles.ROLLBACKPREVVERSION',
-			'Rollback to a Previous Version'
-		);
+		$folder = $this->owner->Parent();
+		$uploadField = VersionedFileUploadField::create('ReplacementFile', '');
+		$uploadField->setConfig('previewMaxWidth', 40);
+		$uploadField->setConfig('previewMaxHeight', 30);
+		$uploadField->setConfig('maxNumberOfFiles', 1);
+		$uploadField->addExtraClass('ss-assetuploadfield');
+		$uploadField->removeExtraClass('ss-uploadfield');
+		$uploadField->setTemplate('VersionedFileUploadField');
+		$uploadField->currentVersionFile = $this->owner; 
+		$uploadField->relationAutoSetting = false;
+
+		if ($folder->exists() && $folder->getFilename()) {
+			$path = preg_replace('/^' . ASSETS_DIR . '\//', '', $folder->getFilename());
+			$uploadField->setFolderName($path);
+		} else {
+			$uploadField->setFolderName(ASSETS_DIR);
+		}
+
+		// set the valid extensions to only that of the original file
+		$ext = strtolower($this->owner->Extension);
+		$uploadField->getValidator()->setAllowedExtensions(array($ext));
+
+		// css / js requirements for asset admin style file uploader
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/AssetUploadField.js');
+		Requirements::css(FRAMEWORK_DIR . '/css/AssetUploadField.css');
+
+		$fields->addFieldToTab('Root.Replace', $uploadField);
+
 
 		$sameTypeMessage = sprintf(_t(
 			'VersionedFiles.SAMETYPEMESSAGE',
 			'You may only replace this file with another of the same type: .%s'
 		), $this->owner->getExtension());
 
-		$replacementOptions = array("upload//$uploadMsg" => new FieldGroup (
-			new LiteralField('SameTypeMessage', '<p>' . $sameTypeMessage . '</p>'),
-			new FileField('ReplacementFile', '')
-		));
+		$fields->addFieldToTab('Root.Replace', new LiteralField('SameTypeMessage', "<p>$sameTypeMessage</p>"));
 
-		$versions = $this->owner->Versions (
-			sprintf('"VersionNumber" <> %d', $this->getVersionNumber())
-		);
-
-		if($versions && $versions->Count()) {
-			$replacementOptions["rollback//$rollbackMsg"] = new DropdownField (
-				'PreviousVersion',
-				'',
-				$versions->map('VersionNumber'),
-				null,
-				null,
-				_t('VersionedFiles.SELECTAVERSION', '(Select a Version)')
-			);
-		}
-
-		$fields->addFieldToTab (
-			'BottomRoot.Replace', new SelectionGroup('Replace', $replacementOptions)
-		);
-
-		$replace = $fields->fieldByName('BottomRoot.Replace');
-		$replace->setTitle(_t('VersionedFiles.REPLACE', 'Replace'));
+		return;		
 	}
 
 	/**
@@ -106,6 +130,10 @@ class VersionedFileExtension extends DataObjectDecorator {
 		}
 
 		if (array_key_exists('Filename', $changed)) {
+			if($changed['Filename']['before'] == null){
+				return;
+			}
+
 			$oldDirname = '/' . trim(dirname($changed['Filename']['before']), '/');
 			$newDirname = '/' . trim(dirname($changed['Filename']['after']), '/');
 
@@ -145,6 +173,7 @@ class VersionedFileExtension extends DataObjectDecorator {
 		$this->onAfterWrite();
 	}
 
+
 	/**
 	 * Deletes all saved version of the file as well as the file itself.
 	 */
@@ -166,12 +195,14 @@ class VersionedFileExtension extends DataObjectDecorator {
 		}
 	}
 
+
 	/**
 	 * @return int
 	 */
 	public function getVersionNumber() {
 		if($this->owner->CurrentVersionID) return $this->owner->CurrentVersion()->VersionNumber;
 	}
+	
 
 	/**
 	 * @param int $version
@@ -207,7 +238,7 @@ class VersionedFileExtension extends DataObjectDecorator {
 	 * @param int $version
 	 */
 	public function savePreviousVersion($version) {
-		if(Controller::curr()->getRequest()->requestVar('Replace') != 'rollback' || !is_numeric($version)) return;
+		if(!is_numeric($version)) return;
 
 		try {
 			$this->setVersionNumber($version);
@@ -220,48 +251,6 @@ class VersionedFileExtension extends DataObjectDecorator {
 		}
 	}
 
-	/**
-	 * Called by the edit form upon save, and handles replacing the file if a
-	 * replacement is specified.
-	 *
-	 * @param array $tmpFile
-	 */
-	public function saveReplacementFile(array $tmpFile) {
-		if(Controller::curr()->getRequest()->requestVar('Replace') != 'upload' || $tmpFile['error'] !=  UPLOAD_ERR_OK) return;
-
-		$upload  = new Upload();
-		$folder  = null;
-
-		if($this->owner->ParentID) {
-			$folder = substr(
-				$this->owner->Parent()->getRelativePath(),
-				strlen(ASSETS_DIR) + 1,
-				-1
-			);
-		}
-
-		$upload->getValidator()->setAllowedExtensions(array($this->owner->getExtension()));
-
-		if(!$upload->validate($tmpFile)) {
-			$errors = implode(', ', $upload->getErrors());
-
-			throw new ValidationException(new ValidationResult (
-				false,
-				"Could not replace '{$this->owner->Name}': " . $errors
-			));
-		}
-
-		// the file must be removed to prevent the upload being renamed
-		unlink($this->owner->getFullPath());
-
-		$upload->loadIntoFile (
-			array_merge($tmpFile, array('name' => $this->owner->Name)),
-			$this->owner,
-			$folder
-		);
-
-		$this->createVersion();
-	}
 
 	/**
 	 * Creates a new file version and sets it as the current version.

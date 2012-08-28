@@ -5,7 +5,7 @@
  *
  * @package silverstripe-versionedfiles
  */
-class VersionedImageExtension extends DataObjectDecorator {
+class VersionedImageExtension extends DataExtension {
 
 	/**
 	 * Regenerates all cached images if the version number has been changed.

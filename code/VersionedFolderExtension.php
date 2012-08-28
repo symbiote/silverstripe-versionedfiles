@@ -2,7 +2,7 @@
 /**
  * @package silverstripe-versionedfiles
  */
-class VersionedFolderExtension extends DataObjectDecorator {
+class VersionedFolderExtension extends DataExtension {
 
 	public function onBeforeDelete() {
 		// A workaround for that fact that Folder::onBeforeDelete() only removes
