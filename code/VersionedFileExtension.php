@@ -7,15 +7,8 @@
  */
 class VersionedFileExtension extends DataExtension {
 
-	/**
-	 * @return array
-	 */
-	public function extraStatics($class = null, $extension = null) {
-		return array (
-			'has_one'  => array('CurrentVersion' => 'FileVersion'),
-			'has_many' => array('Versions'       => 'FileVersion')
-		);
-	}
+	public static $has_one = array('CurrentVersion' => 'FileVersion');
+	public static $has_many = array('Versions'      => 'FileVersion');
 
 	/**
 	 * @param FieldSet $fields
