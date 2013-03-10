@@ -18,10 +18,8 @@ class FileVersionCreationTask extends BuildTask {
 	public function run($request) {
 		$versionless = DataObject::get(
 			'File',
-			'"File"."ClassName" <> \'Folder\' AND "FileVersion"."FileID" IS NULL',
-			null,
-			'LEFT JOIN "FileVersion" ON "FileVersion"."FileID" = "File"."ID"'
-		);
+			'"File"."ClassName" <> \'Folder\' AND "FileVersion"."FileID" IS NULL')
+				->leftJoin("FileVersion",'"FileVersion"."FileID" = "File"."ID"');
 
 		if($versionless) foreach($versionless as $file) {
 			$file->createVersion();
