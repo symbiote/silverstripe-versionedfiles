@@ -70,44 +70,45 @@ class VersionedFileExtension extends DataExtension {
 		$fields->addFieldToTab('Root.History', $gridField);
 
 		// Replace
+		if (!$this->owner->config()->get('disableReplaceTab')) {
+			if(!$this->owner->canEdit()) return;
 
-		if(!$this->owner->canEdit()) return;
+			$folder = $this->owner->Parent();
+			$uploadField = VersionedFileUploadField::create('ReplacementFile', '');
+			$uploadField->setConfig('previewMaxWidth', 40);
+			$uploadField->setConfig('previewMaxHeight', 30);
+			$uploadField->setConfig('allowedMaxFileNumber', 1);
+			$uploadField->addExtraClass('ss-assetuploadfield');
+			$uploadField->removeExtraClass('ss-uploadfield');
+			$uploadField->setTemplate('VersionedFileUploadField');
+			$uploadField->currentVersionFile = $this->owner;
+			$uploadField->relationAutoSetting = false;
 
-		$folder = $this->owner->Parent();
-		$uploadField = VersionedFileUploadField::create('ReplacementFile', '');
-		$uploadField->setConfig('previewMaxWidth', 40);
-		$uploadField->setConfig('previewMaxHeight', 30);
-		$uploadField->setConfig('allowedMaxFileNumber', 1);
-		$uploadField->addExtraClass('ss-assetuploadfield');
-		$uploadField->removeExtraClass('ss-uploadfield');
-		$uploadField->setTemplate('VersionedFileUploadField');
-		$uploadField->currentVersionFile = $this->owner; 
-		$uploadField->relationAutoSetting = false;
+			if ($folder->exists() && $folder->getFilename()) {
+				$path = preg_replace('/^' . ASSETS_DIR . '\//', '', $folder->getFilename());
+				$uploadField->setFolderName($path);
+			} else {
+				$uploadField->setFolderName(ASSETS_DIR);
+			}
 
-		if ($folder->exists() && $folder->getFilename()) {
-			$path = preg_replace('/^' . ASSETS_DIR . '\//', '', $folder->getFilename());
-			$uploadField->setFolderName($path);
-		} else {
-			$uploadField->setFolderName(ASSETS_DIR);
+			// set the valid extensions to only that of the original file
+			$ext = strtolower($this->owner->Extension);
+			$uploadField->getValidator()->setAllowedExtensions(array($ext));
+
+			// css / js requirements for asset admin style file uploader
+			Requirements::javascript(FRAMEWORK_DIR . '/javascript/AssetUploadField.js');
+			Requirements::css(FRAMEWORK_DIR . '/css/AssetUploadField.css');
+
+			$fields->addFieldToTab('Root.Replace', $uploadField);
+
+
+			$sameTypeMessage = sprintf(_t(
+				'VersionedFiles.SAMETYPEMESSAGE',
+				'You may only replace this file with another of the same type: .%s'
+			), $this->owner->getExtension());
+
+			$fields->addFieldToTab('Root.Replace', new LiteralField('SameTypeMessage', "<p>$sameTypeMessage</p>"));
 		}
-
-		// set the valid extensions to only that of the original file
-		$ext = strtolower($this->owner->Extension);
-		$uploadField->getValidator()->setAllowedExtensions(array($ext));
-
-		// css / js requirements for asset admin style file uploader
-		Requirements::javascript(FRAMEWORK_DIR . '/javascript/AssetUploadField.js');
-		Requirements::css(FRAMEWORK_DIR . '/css/AssetUploadField.css');
-
-		$fields->addFieldToTab('Root.Replace', $uploadField);
-
-
-		$sameTypeMessage = sprintf(_t(
-			'VersionedFiles.SAMETYPEMESSAGE',
-			'You may only replace this file with another of the same type: .%s'
-		), $this->owner->getExtension());
-
-		$fields->addFieldToTab('Root.Replace', new LiteralField('SameTypeMessage', "<p>$sameTypeMessage</p>"));
 
 		return;		
 	}
