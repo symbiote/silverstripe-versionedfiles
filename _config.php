@@ -3,6 +3,6 @@
  * @package silverstripe-versionedfiles
  */
 
-Object::add_extension('File',   'VersionedFileExtension');
-Object::add_extension('Image',  'VersionedImageExtension');
-Object::add_extension('Folder', 'VersionedFolderExtension');
+File::add_extension('VersionedFileExtension');
+Image::add_extension('VersionedImageExtension');
+Folder::add_extension('VersionedFolderExtension');
