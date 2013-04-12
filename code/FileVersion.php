@@ -9,12 +9,12 @@ class FileVersion extends DataObject {
 
 	const VERSION_FOLDER = '_versions';
 
-	public static $db = array (
+	private static $db = array (
 		'VersionNumber' => 'Int',
 		'Filename'      => 'Varchar(255)'
 	);
 
-	public static $has_one = array (
+	private static $has_one = array (
 		'Creator' => 'Member',
 		'File'    => 'File'
 	);
