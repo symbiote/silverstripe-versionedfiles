@@ -1,0 +1,35 @@
+en:
+  AssetUploadField:
+    DROPAREA: 'Drop Area'
+    FILES: Files
+    FROMCOMPUTERINFO: 'Upload from your computer'
+    TOTAL: Total
+    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADOR: OR
+  FileVersion:
+    PLURALNAME: 'File Versions'
+    SINGULARNAME: 'File Version'
+  FileVersionCreationTask:
+    Created: 'Created {count} file version records.'
+    Desc: 'Creates version records for files that do not have one.'
+    NoCreated: 'No file version records created.'
+    Title: 'File Version Creation Task'
+  UploadField:
+    FIELDNOTSET: 'File information not found'
+    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+  VerionedFiles:
+    DRAGFILEHERE: 'Drag file here'
+    TOUPLOAD: 'Choose file to upload...'
+    UPLOADNEWFILE: 'Upload a New File'
+  VersionNumber:
+    VERSIONNUM: 'Version %d'
+  VersionedFiles:
+    CREATOR: Creator
+    CURRENTVERSION: 'Current Version'
+    DATE: Date
+    ISCURRENT: 'Is Current'
+    LINK: Link
+    ROLLBACKPREVVERSION: 'Rollback to a Previous Version'
+    SAMETYPEMESSAGE: 'You may only replace this file with another of the same type: .%s'
+    SELECTAVERSION: '(Select a Version)'
+    VERSIONNUMBER: 'Version Number'
