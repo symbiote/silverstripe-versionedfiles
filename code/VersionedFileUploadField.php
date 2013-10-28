@@ -1,6 +1,9 @@
 <?php
 class VersionedFileUploadField extends UploadField {
 
+	private static $allowed_actions = array(
+		'upload'
+	);
 
 	/**
 	 * The file to upload a new version of
