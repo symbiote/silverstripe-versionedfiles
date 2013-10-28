@@ -77,7 +77,7 @@ class VersionedFileExtension extends DataExtension {
 		$uploadField = VersionedFileUploadField::create('ReplacementFile', '');
 		$uploadField->setConfig('previewMaxWidth', 40);
 		$uploadField->setConfig('previewMaxHeight', 30);
-		$uploadField->setConfig('maxNumberOfFiles', 1);
+		$uploadField->setConfig('allowedMaxFileNumber', 1);
 		$uploadField->addExtraClass('ss-assetuploadfield');
 		$uploadField->removeExtraClass('ss-uploadfield');
 		$uploadField->setTemplate('VersionedFileUploadField');
