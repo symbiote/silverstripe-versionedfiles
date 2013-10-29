@@ -1,0 +1,35 @@
+zh:
+  AssetUploadField:
+    DROPAREA: '拖拽区'
+    FILES: 文件
+    FROMCOMPUTERINFO: '从计算机上传'
+    TOTAL: 总数
+    UPLOADINPROGRESS: '请等待...... 正在进行上传'
+    UPLOADOR: 或
+  FileVersion:
+    PLURALNAME: '文件版本'
+    SINGULARNAME: '文件版本'
+  FileVersionCreationTask:
+    Created: '创建 {count} 个文件版本记录。'
+    Desc: '为没有版本记录的文件创建版本记录。'
+    NoCreated: '未创建文件版本记录。'
+    Title: '文件版本创建任务'
+  UploadField:
+    FIELDNOTSET: '未找到文件信息'
+    MAXNUMBEROFFILES: '已超过 {count} 个文件的数量上限。'
+  VerionedFiles:
+    DRAGFILEHERE: '将文件拖到这里'
+    TOUPLOAD: '选择要上传的文件......'
+    UPLOADNEWFILE: '上传一个新文件'
+  VersionNumber:
+    VERSIONNUM: '版本 %d'
+  VersionedFiles:
+    CREATOR: 创建者
+    CURRENTVERSION: '当前版本'
+    DATE: 日期
+    ISCURRENT: '是最新的'
+    LINK: 链接
+    ROLLBACKPREVVERSION: '回到以前的版本'
+    SAMETYPEMESSAGE: '您只能用相同类型的 .%s 文件替换此文件'
+    SELECTAVERSION: '（选择一个版本）'
+    VERSIONNUMBER: '版本号'
