@@ -26,9 +26,7 @@ class VersionedImageExtension extends DataExtension {
 		$filter   = new RegexIterator (
 			$iterator,
 			sprintf(
-				// TODO: this regex needs to be checked that it catches all Image transforms.
-				// We need to catch edge cases such as "PaddedImage300150FFFFFF-test-image.png"
-				"/([a-zA-Z]+)([0-9]?[0-9ABCDEF]*)-%s/",
+				"/([a-z]+)([0-9]?[0-9a-f]*)-%s/i",
 				preg_quote($this->owner->Name)
 			),
 			RegexIterator::GET_MATCH
@@ -51,11 +49,14 @@ class VersionedImageExtension extends DataExtension {
 			// it. Different methods need different ways of determining the
 			// original arguments used.
 			switch(strtolower($method)) {
+				case 'paddedimage':
+					$color = preg_replace("/^{$size[0]}{$size[1]}/", '', $arguments);
+					$this->owner->$method($size[0], $size[1], $color);
+					break;
 				case 'resizedimage':
 				case 'setsize':
-				case 'paddedimage':
-					// TODO: paddedimage should also take into the account the third parameter: colour.
 				case 'croppedimage':
+				case 'setratiosize':
 					$this->owner->$method($size[0], $size[1]);
 					break;
 
@@ -65,18 +66,6 @@ class VersionedImageExtension extends DataExtension {
 
 				case 'setheight':
 					$this->owner->$method($size[1]);
-					break;
-
-				case 'setratiosize':
-					if(strpos($arguments, $size[0]) === 0) {
-						$this->owner->$method(
-							$size[0], substr($arguments, strlen($size[0]))
-						);
-					} else {
-						$this->owner->$method(
-							$size[1], substr($arguments, 0, strlen($size[0]) * -1)
-						);
-					}
 					break;
 
 				default:

@@ -41,9 +41,7 @@ class VersionedImageTest extends FunctionalTest {
 
 	public function tearDown() {
 		$this->image->delete();
-
-		// TODO: how to clean up _resampled images? The following breaks with this->reference bein NULL.
-		// $this->reference->delete();
+		if($this->reference) $this->reference->delete();
 
 		parent::tearDown();
 	}
