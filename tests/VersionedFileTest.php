@@ -20,9 +20,7 @@ class VersionedFileTest extends FunctionalTest {
 	public function setUp() {
 		parent::setUp();
 
-		$this->folder = new Folder();
-		$this->folder->Filename = ASSETS_DIR . '/versionedfiles-test';
-		$this->folder->write();
+		$this->folder = Folder::find_or_make(ASSETS_DIR . '/versionedfiles-test');
 
 		$file = $this->folder->getFullPath() . 'test-file.txt';
 		file_put_contents($file, 'first-version');
@@ -31,13 +29,17 @@ class VersionedFileTest extends FunctionalTest {
 		$this->file->ParentID = $this->folder->ID;
 		$this->file->Filename = $this->folder->getFilename() . 'test-file.txt';
 		$this->file->write();
+
+		SecurityToken::disable();
 	}
 
 	public function tearDown() {
-		parent::tearDown();
+		SecurityToken::enable();
 
 		$this->folder->deleteDatabaseOnly();
 		Filesystem::removeFolder($this->folder->getFullPath());
+
+		parent::tearDown();
 	}
 
 	public function testInitialSaveCreatesVersion() {
@@ -86,7 +88,7 @@ class VersionedFileTest extends FunctionalTest {
 			file_get_contents($this->file->CurrentVersion()->getFullPath())
 		);
 
-		$form = $this->mainSession->lastPage()->getFormById('ComplexTableField_Popup_DetailForm');
+		$form = $this->mainSession->lastPage()->getFormById('Form_ItemEditForm');
 		$url  = Director::makeRelative($form->getAction()->asString());
 		$data = array();
 
@@ -109,18 +111,18 @@ class VersionedFileTest extends FunctionalTest {
 	}
 
 	protected function getFileEditForm() {
-		Form::disable_all_security_tokens();
 
 		$admin  = new AssetAdmin();
 		$folder = Controller::join_links(
 			$admin->Link(), 'show', $this->folder->ID
 		);
 		$file = Controller::join_links(
-			$admin->Link(), 'EditForm/field/Files/item', $this->file->ID, 'edit'
+			$admin->Link(), 'EditForm/field/File/item', $this->file->ID, 'edit'
 		);
 
 		$this->get($folder);
 		$this->get($file);
+
 	}
 
 }

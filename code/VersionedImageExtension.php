@@ -26,7 +26,9 @@ class VersionedImageExtension extends DataExtension {
 		$filter   = new RegexIterator (
 			$iterator,
 			sprintf(
-				"/([a-zA-Z]+)([0-9]*)-%s/",
+				// TODO: this regex needs to be checked that it catches all Image transforms.
+				// We need to catch edge cases such as "PaddedImage300150FFFFFF-test-image.png"
+				"/([a-zA-Z]+)([0-9]?[0-9ABCDEF]*)-%s/",
 				preg_quote($this->owner->Name)
 			),
 			RegexIterator::GET_MATCH
@@ -48,6 +50,7 @@ class VersionedImageExtension extends DataExtension {
 				case 'resizedimage':
 				case 'setsize':
 				case 'paddedimage':
+					// TODO: paddedimage should also take into the account the third parameter: colour.
 				case 'croppedimage':
 					$this->owner->$method($size[0], $size[1]);
 					break;
