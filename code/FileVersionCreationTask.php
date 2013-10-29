@@ -8,9 +8,19 @@
  */
 class FileVersionCreationTask extends BuildTask {
 
-	protected $title = 'File Version Creation Task';
+	public function getTitle() {
+		return _t(
+			'FileVersionCreationTask.Title',
+			'File Version Creation Task'
+		);
+	}
 
-	protected $description = 'Creates version records for files that do not have one.';
+	public function getDescription() {
+		return _t(
+			'FileVersionCreationTask.Desc',
+			'Creates version records for files that do not have one.'
+		);
+	}
 
 	/**
 	 * @param HTTPRequest $request
@@ -26,9 +36,16 @@ class FileVersionCreationTask extends BuildTask {
 		}
 
 		if($versionless) {
-			echo "Created {$versionless->Count()} file version records.";
+			echo _t(
+				'FileVersionCreationTask.Created',
+				"Created {count} file version records.",
+				array('count' => $versionless->Count())
+			);
 		} else {
-			echo 'No file version records created.';
+			echo _t(
+				'FileVersionCreationTask.NoCreated',
+				'No file version records created.'
+			);
 		}
 	}
 

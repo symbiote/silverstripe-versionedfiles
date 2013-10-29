@@ -38,3 +38,10 @@ rollback to a specific version in the Replace tab.
 Known Issues
 ------------
 [Issue Tracker](http://github.com/ajshort/silverstripe-versionedfiles/issues)
+
+Contributing Translations
+-------------------------
+
+Translations of the natural language strings are managed through a third party translation interface, transifex.com. Newly added strings will be periodically uploaded there for translation, and any new translations will be merged back to the project source code.
+
+Please use [https://www.transifex.com/projects/p/silverstripe-versionedfiles](https://www.transifex.com/projects/p/silverstripe-versionedfiles) to contribute translations, rather than sending pull requests with YAML files.
