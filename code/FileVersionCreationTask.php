@@ -26,20 +26,21 @@ class FileVersionCreationTask extends BuildTask {
 	 * @param HTTPRequest $request
 	 */
 	public function run($request) {
-		$versionless = DataObject::get(
-			'File',
-			'"File"."ClassName" <> \'Folder\' AND "FileVersion"."FileID" IS NULL')
-				->leftJoin("FileVersion",'"FileVersion"."FileID" = "File"."ID"');
+		$versionless = File::get()->leftJoin(
+			'FileVersion',
+			'"FileVersion"."FileID" = "File"."ID"'
+		)->where('"File"."ClassName" <> \'Folder\' AND "FileVersion"."FileID" IS NULL');
+		$createdVersions = 0;
 
 		if($versionless) foreach($versionless as $file) {
-			$file->createVersion();
+			if($file->createVersion()) ++$createdVersions;
 		}
 
-		if($versionless) {
+		if($createdVersions) {
 			echo _t(
 				'FileVersionCreationTask.Created',
 				"Created {count} file version records.",
-				array('count' => $versionless->Count())
+				array('count' => $createdVersions)
 			);
 		} else {
 			echo _t(
