@@ -1,6 +1,8 @@
 SilverStripe Versioned Files Module
 ===================================
 
+[![Build Status](https://secure.travis-ci.org/ajshort/silverstripe-versionedfiles.png?branch=master)](http://travis-ci.org/ajshort/silverstripe-versionedfiles)
+
 Maintainer Contacts
 -------------------
 *  Andrew Short (<andrewjshort@gmail.com>)
