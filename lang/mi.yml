@@ -1,0 +1,35 @@
+mi:
+  AssetUploadField:
+    DROPAREA: 'Wāhi Taka'
+    FILES: Ngā Kōnae
+    FROMCOMPUTERINFO: 'Tukuatu  i tō rorohiko'
+    TOTAL: Tapeke
+    UPLOADINPROGRESS: 'Taihoa...he tukuatu kei te haere'
+    UPLOADOR: RĀNEI
+  FileVersion:
+    PLURALNAME: 'Ngā Putanga Kōnae'
+    SINGULARNAME: 'Putanga Kōnae'
+  FileVersionCreationTask:
+    Created: 'I hangaia e {count} ngā pūkete putanga kōnae.'
+    Desc: 'Ka hanga pūkete putanga mō ngā kōnae kāore he pūkete putanga.'
+    NoCreated: 'Kāore i hangaia he pūkete putanga kōnae'
+    Title: 'Tūmahi Hanga Putanga Kōnae'
+  UploadField:
+    FIELDNOTSET: 'Kāore i kitea he mōhiohio kōnae'
+    MAXNUMBEROFFILES: 'Kua hipa te mōrahi o ngā kōnae {count}.'
+  VerionedFiles:
+    DRAGFILEHERE: 'Tōia mai te kōnae ki konei'
+    TOUPLOAD: 'Kōwhiria te kōnae hei tukuatu...'
+    UPLOADNEWFILE: 'Tukuna atu he Kōnae Hou'
+  VersionNumber:
+    VERSIONNUM: '%d putanga'
+  VersionedFiles:
+    CREATOR: Kaihanga
+    CURRENTVERSION: 'Putanga Onāianei'
+    DATE: Rā
+    ISCURRENT: 'He Tika ā-Wā'
+    LINK: Hono
+    ROLLBACKPREVVERSION: 'Hoki whakamuri ki tētahi Putanga Tōmua'
+    SAMETYPEMESSAGE: 'Ka taea te whakakapi anake tēnei kōnae ki tētahi atu he ōrite te momo: .%s'
+    SELECTAVERSION: '(Tīpakohia he Putanga)'
+    VERSIONNUMBER: 'Tau Putanga'

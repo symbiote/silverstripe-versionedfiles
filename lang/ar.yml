@@ -1,0 +1,35 @@
+ar:
+  AssetUploadField:
+    DROPAREA: 'منطقة الإسقاط'
+    FILES: الملفات
+    FROMCOMPUTERINFO: 'تحميل من الكمبيوتر الخاص بك'
+    TOTAL: المجموع
+    UPLOADINPROGRESS: 'يرجى الانتظار ... عملية الإيداع في تقدم'
+    UPLOADOR: أو
+  FileVersion:
+    PLURALNAME: 'إصدارات الملف'
+    SINGULARNAME: 'إصدار الملف'
+  FileVersionCreationTask:
+    Created: 'إنشاء {count} سجلات إصدار للملف.'
+    Desc: 'إنشاء سجلات الإصدار للملفات التي ليس لها واحد.'
+    NoCreated: 'لم يتم إنشاء سجلات إصدار للملف.'
+    Title: 'مهمة إنشاء إصدار الملف'
+  UploadField:
+    FIELDNOTSET: 'لم يتم العثور على المعلومات الخاصة بالملف'
+    MAXNUMBEROFFILES: 'تم تجاوز العدد الأقصى {count} ملف(ات) .'
+  VerionedFiles:
+    DRAGFILEHERE: 'اسحب الملف إلى هنا'
+    TOUPLOAD: 'اختر ملف للتحميل ...'
+    UPLOADNEWFILE: 'إيداع ملف جديد'
+  VersionNumber:
+    VERSIONNUM: 'النسخة %d'
+  VersionedFiles:
+    CREATOR: المستحدث
+    CURRENTVERSION: 'النسخة الحالية'
+    DATE: التاريخ
+    ISCURRENT: 'هو الحالي'
+    LINK: الرابط
+    ROLLBACKPREVVERSION: 'العودة إلى إصدار سابق'
+    SAMETYPEMESSAGE: 'تستطيع استبدال هذا الملف بآخر من نفس النوع فقط: .%s'
+    SELECTAVERSION: '(اختر إصدارا)'
+    VERSIONNUMBER: 'رقم الإصدار'
