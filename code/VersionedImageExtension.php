@@ -37,6 +37,10 @@ class VersionedImageExtension extends DataExtension {
 		// grab each resampled image and regenerate it
 		foreach($filter as $cachedImage) {
 			$path      = "$resampled/{$cachedImage[0]}";
+
+			//skip resampled image files that don't exist
+			if (!file_exists($path)) continue;
+
 			$size      = getimagesize($path);
 			$method    = $cachedImage[1];
 			$arguments = $cachedImage[2];
