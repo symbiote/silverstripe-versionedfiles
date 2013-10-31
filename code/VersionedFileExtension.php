@@ -250,17 +250,17 @@ class VersionedFileExtension extends DataExtension {
 	/**
 	 * Creates a new file version and sets it as the current version.
 	 *
-	 * @param bool $write
+	 * @return boolean Whether file version is created
 	 */
 	public function createVersion() {
-		if(!file_exists($this->owner->getFullPath())) return;
+		if(!file_exists($this->owner->getFullPath())) return false;
 
 		$version = new FileVersion();
 		$version->FileID = $this->owner->ID;
 		$version->write();
 
 		$this->owner->CurrentVersionID = $version->ID;
-		$this->owner->write();
+		return (bool) $this->owner->write();
 	}
 
 }
