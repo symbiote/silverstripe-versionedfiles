@@ -78,7 +78,18 @@ class VersionedFileUploadField extends UploadField {
 				if(file_exists($currentFilePath)){
 					unlink($this->currentVersionFile->getFullPath());
 				}
-				$this->upload->loadIntoFile(array_merge($tmpfile, array('name' => $this->currentVersionFile->Name)), $this->currentVersionFile, $this->folderName);
+
+				// If $folderName == assets (by default), then this will try and create a file inside assets/assets
+				// instead of creating it in the root. This check ensures that the newly uploaded files overwrites the
+				// old file in the assets root directory.
+				$folderName = $this->folderName;
+				if($folderName == basename(ASSETS_PATH)) $folderName = "/";
+
+				$this->upload->loadIntoFile(
+					array_merge($tmpfile, array('name' => $this->currentVersionFile->Name)),
+					$this->currentVersionFile,
+					$folderName
+				);
 			} catch (Exception $e) {
 				// we shouldn't get an error here, but just in case
 				$return['error'] = $e->getMessage();
