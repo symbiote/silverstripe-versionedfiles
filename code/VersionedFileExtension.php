@@ -191,17 +191,19 @@ class VersionedFileExtension extends DataExtension {
 			// If the _versions folder is now empty - because there are no other versions of any assets - then we can
 			// delete the _versions folder
 			$folder = dirname($folder); // We want the parent of $folder, as we just deleted $folder
-			$dir = opendir($folder);
-			$foundOtherFile = false;
+			if(is_dir($folder)) {
+				$dir = opendir($folder);
+				$foundOtherFile = false;
 
-			while($file = readdir($dir)) {
-				if(($file == '.' || $file == '..')) continue;
-				$foundOtherFile = true;
-			}
+				while($file = readdir($dir)) {
+					if(($file == '.' || $file == '..')) continue;
+					$foundOtherFile = true;
+				}
 
-			if(!$foundOtherFile) {
-				// No other files found, so we can delete the _versions folder
-				rmdir($folder);
+				if(!$foundOtherFile) {
+					// No other files found, so we can delete the _versions folder
+					rmdir($folder);
+				}
 			}
 		}
 	}
