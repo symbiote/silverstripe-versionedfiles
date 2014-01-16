@@ -110,6 +110,50 @@ class VersionedFileTest extends FunctionalTest {
 		);
 	}
 
+	/**
+	 * We need to test that the _versions folder isn't completed wiped by
+	 * {@link VersionedFileExtension::onBeforeDelete()} when there is more than the file currently being deleted.
+	 */
+	public function testOnBeforeDelete() {
+		// Create the second file
+		$file2 = $this->folder->getFullPath() . 'test-file2.txt';
+		file_put_contents($file2, 'first-version');
+
+		$file2Obj = new File();
+		$file2Obj->ParentID = $this->folder->ID;
+		$file2Obj->Filename = $this->folder->getFilename() . 'test-file2.txt';
+		$file2Obj->write();
+
+		// Create a second version of the second file
+		file_put_contents($file2Obj->getFullPath(), 'second-version');
+		$file2Obj->createVersion();
+
+		// Delete the second file
+		$file2Obj->delete();
+
+		// Ensure the _versions folder still exists
+		$this->assertTrue(is_dir($this->folder->getFullPath()));
+		$this->assertTrue(is_dir($this->folder->getFullPath() . '/_versions'));
+
+		// Now delete the first file, and ensure the _versions folder no longer exists
+		$this->file->delete();
+
+		$this->assertTrue(is_dir($this->folder->getFullPath()));
+		$this->assertFalse(is_dir($this->folder->getFullPath() . '/_versions'));
+
+		// Now create another file to ensure that the _versions folder can be successfully re-created
+		$file3 = $this->folder->getFullPath() . 'test-file3.txt';
+		file_put_contents($file3, 'first-version');
+
+		$file3Obj = new File();
+		$file3Obj->ParentID = $this->folder->ID;
+		$file3Obj->Filename = $this->folder->getFilename() . 'test-file3.txt';
+		$file3Obj->write();
+
+		$this->assertTrue(is_file($file3Obj->getFullPath()));
+		$this->assertTrue(is_dir($this->folder->getFullPath() . '/_versions'));
+	}
+
 	protected function getFileEditForm() {
 
 		$admin  = new AssetAdmin();

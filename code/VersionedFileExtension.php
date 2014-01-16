@@ -187,6 +187,22 @@ class VersionedFileExtension extends DataExtension {
 			}
 
 			if(is_dir($folder)) Filesystem::removeFolder($folder);
+
+			// If the _versions folder is now empty - because there are no other versions of any assets - then we can
+			// delete the _versions folder
+			$folder = dirname($folder); // We want the parent of $folder, as we just deleted $folder
+			$dir = opendir($folder);
+			$foundOtherFile = false;
+
+			while($file = readdir($dir)) {
+				if(($file == '.' || $file == '..')) continue;
+				$foundOtherFile = true;
+			}
+
+			if(!$foundOtherFile) {
+				// No other files found, so we can delete the _versions folder
+				rmdir($folder);
+			}
 		}
 	}
 
