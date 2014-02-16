@@ -4,3 +4,7 @@ Name: versionedfiles
 File:
   #can be used to disable the VersionedFiles replace menu tab in the CMS (useful when Upload: replaceFiles = true)
   disableReplaceTab: false
+
+Filesystem:
+  sync_blacklisted_patterns:
+    - "/^_versions$/i"
