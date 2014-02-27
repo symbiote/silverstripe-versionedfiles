@@ -57,6 +57,7 @@ class VersionedImageExtension extends DataExtension {
 				case 'setsize':
 				case 'croppedimage':
 				case 'setratiosize':
+				case 'croppedfocusedimage':
 					$this->owner->$method($size[0], $size[1]);
 					break;
 
