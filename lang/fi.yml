@@ -1,0 +1,35 @@
+fi:
+  AssetUploadField:
+    DROPAREA: 'Pudotusalue'
+    FILES: Tiedostot
+    FROMCOMPUTERINFO: 'Siirrä omalta laitteelta'
+    TOTAL: Yhteensä
+    UPLOADINPROGRESS: 'Odota... tiedoston siirto käynnissä'
+    UPLOADOR: TAI
+  FileVersion:
+    PLURALNAME: 'Tiedostoversiot'
+    SINGULARNAME: 'Tiedostoversio'
+  FileVersionCreationTask:
+    Created: 'Luotiin {count} tiedostoversiota'
+    Desc: 'Luo versiot tiedostoista, joissa versiointia ei ole.'
+    NoCreated: 'Eri versiotietoja ei luotu.'
+    Title: 'Tiedostoversioinnin luonti'
+  UploadField:
+    FIELDNOTSET: 'Tietoja tiedostosta ei löytynyt'
+    MAXNUMBEROFFILES: 'Suurin sallittu määrä, {count} tiedosto(a), ylitetty.'
+  VerionedFiles:
+    DRAGFILEHERE: 'Pudota tiedosto tänne'
+    TOUPLOAD: 'Valitse siirrettävä tiedosto'
+    UPLOADNEWFILE: 'Siirrä uusi tiedosto'
+  VersionNumber:
+    VERSIONNUM: 'Versio %d'
+  VersionedFiles:
+    CREATOR: Luoja
+    CURRENTVERSION: 'Nykyinen versio'
+    DATE: PVM
+    ISCURRENT: 'On nykyinen'
+    LINK: Linkki
+    ROLLBACKPREVVERSION: 'Palaa edelliseen versioon'
+    SAMETYPEMESSAGE: 'Voit ylikirjoittaa tämän tiedoston vain vastaavassa formaatissa: .%s'
+    SELECTAVERSION: '(Valitse versio)'
+    VERSIONNUMBER: 'Versionumero'
