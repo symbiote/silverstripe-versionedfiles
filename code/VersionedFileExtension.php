@@ -74,7 +74,7 @@ class VersionedFileExtension extends DataExtension {
 			if(!$this->owner->canEdit()) return;
 
 			$folder = $this->owner->Parent();
-			$uploadField = VersionedFileUploadField::create('ReplacementFile', '');
+			$uploadField = new VersionedFileUploadField('ReplacementFile', '');
 			$uploadField->setConfig('previewMaxWidth', 40);
 			$uploadField->setConfig('previewMaxHeight', 30);
 			$uploadField->setConfig('allowedMaxFileNumber', 1);
