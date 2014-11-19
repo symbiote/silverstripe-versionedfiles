@@ -83,6 +83,7 @@ class VersionedFileExtension extends DataExtension {
 			$uploadField->setTemplate('VersionedFileUploadField');
 			$uploadField->currentVersionFile = $this->owner;
 			$uploadField->relationAutoSetting = false;
+			$uploadField->setOverwriteWarning(false);
 
 			if ($folder->exists() && $folder->getFilename()) {
 				$path = preg_replace('/^' . ASSETS_DIR . '\//', '', $folder->getFilename());
