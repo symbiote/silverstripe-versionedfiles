@@ -1,0 +1,35 @@
+eo:
+  AssetUploadField:
+    DROPAREA: 'Lasi zonon'
+    FILES: Dosieroj
+    FROMCOMPUTERINFO: 'Alŝuti el via komputilo'
+    TOTAL: Totalo
+    UPLOADINPROGRESS: 'Bonvolu atendi...alŝuto daŭras'
+    UPLOADOR: AŬ
+  FileVersion:
+    PLURALNAME: 'Versioj de dosieroj'
+    SINGULARNAME: 'Versio de dosiero'
+  FileVersionCreationTask:
+    Created: 'Kreis {count} rikordojn de dosieraj versioj.'
+    Desc: 'Kreas versiajn rikordojn por dosieroj kiuj ne havas rikordon.'
+    NoCreated: 'Ne kreis dosierversian rikordon.'
+    Title: 'Tasko krei dosieran version'
+  UploadField:
+    FIELDNOTSET: 'Ne trovis dosieran informon'
+    MAXNUMBEROFFILES: 'Superis la maksimuman nombron {count} da dosieroj.'
+  VerionedFiles:
+    DRAGFILEHERE: 'Ŝovi dosieron ĉi tien'
+    TOUPLOAD: 'Elekti dosieron alŝutotan...'
+    UPLOADNEWFILE: 'Alŝuti novan dosieron'
+  VersionNumber:
+    VERSIONNUM: 'Versio %d'
+  VersionedFiles:
+    CREATOR: Kreinto
+    CURRENTVERSION: 'Aktuala versio'
+    DATE: Dato
+    ISCURRENT: 'Estas aktuala'
+    LINK: Ligilo
+    ROLLBACKPREVVERSION: 'Malfari al antaŭa versio'
+    SAMETYPEMESSAGE: 'Vi povas anstataŭigi ĉi tiun dosieron nur per samspeca: .%s'
+    SELECTAVERSION: '(Elektu version)'
+    VERSIONNUMBER: 'Versinumero'
