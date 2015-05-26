@@ -1,0 +1,14 @@
+id:
+  AssetUploadField:
+    FILES: Berkas
+    TOTAL: Total
+  FileVersion:
+    PLURALNAME: 'Versi Berkas'
+    SINGULARNAME: 'Versi Berkas'
+  VersionNumber:
+    VERSIONNUM: 'Versi %d'
+  VersionedFiles:
+    DATE: Tanggal
+    LINK: Tautan
+    SELECTAVERSION: '(Pilih Versi)'
+    VERSIONNUMBER: 'Nomor Versi'
