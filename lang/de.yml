@@ -1,0 +1,33 @@
+de:
+  AssetUploadField:
+    DROPAREA: 'Ablegebereich'
+    FILES: Dateien
+    FROMCOMPUTERINFO: 'Von Ihrem Computer hochladen'
+    TOTAL: Insgesamt
+    UPLOADINPROGRESS: 'Bitte warten… Hochladen läuft'
+    UPLOADOR: ODER
+  FileVersion:
+    PLURALNAME: 'Dateiversionen'
+    SINGULARNAME: 'Dateiversion'
+  FileVersionCreationTask:
+    Created: '{count} Dateiversionseinträge erstellt.'
+    NoCreated: 'Keine Dateiversionseinträge erstellt.'
+    Title: 'Dateiversionserstellungsaufgabe'
+  UploadField:
+    FIELDNOTSET: 'Dateiinformationen nicht gefunden'
+    MAXNUMBEROFFILES: 'Maximale Anzahl von {count} Datei(en) überschritten.'
+  VerionedFiles:
+    DRAGFILEHERE: 'Datei hier ablegen'
+    TOUPLOAD: 'Datei zum Hochladen auswählen...'
+    UPLOADNEWFILE: 'Neue Datei hochladen'
+  VersionNumber:
+    VERSIONNUM: 'Version %d'
+  VersionedFiles:
+    CREATOR: Ersteller
+    CURRENTVERSION: 'Aktuelle Version'
+    DATE: Datum
+    ISCURRENT: 'Ist aktuell'
+    LINK: Link
+    ROLLBACKPREVVERSION: 'Auf eine vorherige Version zurücksetzen'
+    SELECTAVERSION: '(Wählen Sie eine Version aus)'
+    VERSIONNUMBER: 'Versionsnummer'

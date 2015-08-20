@@ -1,0 +1,12 @@
+es:
+  AssetUploadField:
+    FILES: Archivos
+    FROMCOMPUTERINFO: 'Subir desde su computadora'
+    TOTAL: Total
+    UPLOADINPROGRESS: 'Por favor, espere... subida en curso'
+    UPLOADOR: O
+  FileVersion:
+    PLURALNAME: 'Versiones del archivo'
+    SINGULARNAME: 'Versión del archivo'
+  FileVersionCreationTask:
+    Created: 'Se crearon {count} registros de versión del archivo.'

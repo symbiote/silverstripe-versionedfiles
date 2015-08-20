@@ -1,0 +1,35 @@
+pl:
+  AssetUploadField:
+    DROPAREA: 'Obszar upuszczania'
+    FILES: Pliki
+    FROMCOMPUTERINFO: 'Załaduj z twojego komputera'
+    TOTAL: Razem
+    UPLOADINPROGRESS: 'Pliki są przesyłane... proszę czekać'
+    UPLOADOR: LUB
+  FileVersion:
+    PLURALNAME: 'Wersje pliku'
+    SINGULARNAME: 'Wersja pliku'
+  FileVersionCreationTask:
+    Created: 'Utworzono {count} rekordów wersji plików.'
+    Desc: 'Tworzy rekordy wersji dla plików które ich nie mają.'
+    NoCreated: 'Nie utworzono rekordów wersji.'
+    Title: 'Zadanie tworzenia wersji rekordów'
+  UploadField:
+    FIELDNOTSET: 'Nie znaleziono informacji o pliku'
+    MAXNUMBEROFFILES: 'Osiągnięto maksymalną liczbę {count} plików.'
+  VerionedFiles:
+    DRAGFILEHERE: 'Przeciągnij plik tutaj'
+    TOUPLOAD: 'Wybierz plik do załadowania...'
+    UPLOADNEWFILE: 'Załaduj nowy plik'
+  VersionNumber:
+    VERSIONNUM: 'Wersja %d'
+  VersionedFiles:
+    CREATOR: Twórca
+    CURRENTVERSION: 'Aktualna wersja'
+    DATE: Data
+    ISCURRENT: 'Czy aktualna'
+    LINK: Link
+    ROLLBACKPREVVERSION: 'Przywróć poprzednią wersję'
+    SAMETYPEMESSAGE: 'Możesz zastąpić ten plik tylko plikiem tego samego typu: .%s'
+    SELECTAVERSION: '(Wybierz wersję)'
+    VERSIONNUMBER: 'Numer wersji'

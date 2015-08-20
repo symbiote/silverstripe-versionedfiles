@@ -1,0 +1,35 @@
+it:
+  AssetUploadField:
+    DROPAREA: 'Area di Trascinamento'
+    FILES: Files
+    FROMCOMPUTERINFO: 'Carica dal tuo conputer'
+    TOTAL: Totale
+    UPLOADINPROGRESS: 'Attendere prego... caricamento in corso'
+    UPLOADOR: O
+  FileVersion:
+    PLURALNAME: 'Versioni File'
+    SINGULARNAME: 'Versione File'
+  FileVersionCreationTask:
+    Created: 'Create {count} voci di versione file.'
+    Desc: 'Crea voci di versione nei file che non ne hanno una.'
+    NoCreated: 'Non sono state create voci di versione file.'
+    Title: 'Task di Creazione Versione File'
+  UploadField:
+    FIELDNOTSET: 'Informazioni file non trovate'
+    MAXNUMBEROFFILES: 'Numero massimo di {count} file(s) superato.'
+  VerionedFiles:
+    DRAGFILEHERE: 'Trascina file qui'
+    TOUPLOAD: 'Scegli i file da caricare...'
+    UPLOADNEWFILE: 'Caricare un Nuovo File'
+  VersionNumber:
+    VERSIONNUM: 'Versione %d'
+  VersionedFiles:
+    CREATOR: Creatore
+    CURRENTVERSION: 'Versione attuale'
+    DATE: Data
+    ISCURRENT: 'È Attuale'
+    LINK: Link
+    ROLLBACKPREVVERSION: 'Ripristina alla Versione Precedente'
+    SAMETYPEMESSAGE: 'Puoi sostituire questo file sono con un altro dello stesso tipo: .%s'
+    SELECTAVERSION: '(Selezionare una Versione)'
+    VERSIONNUMBER: 'Numero Versione'
