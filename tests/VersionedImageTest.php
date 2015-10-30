@@ -54,20 +54,21 @@ class VersionedImageTest extends FunctionalTest {
 	 * @dataProvider resampleProvider
 	 */
 	public function testVersionChangeResamplesImage($method, array $arguments) {
+		// Ensure files exist
 		call_user_func_array(array($this->image, $method), $arguments);
-		call_user_func_array(array($this->reference, $method), $arguments);
+		$referenceImage = call_user_func_array(array($this->reference, $method), $arguments);
 
 		$this->image->setVersionNumber(1);
 		$this->image->write();
 
-		$dir = dirname($this->reference->getFullPath());
-		$reference = basename($this->reference->getFullPath());
-		$tested = basename($this->image->getFullPath());
-		$args = implode('', $arguments);
+		// Get reference and tested cache name
+		$referenceFilename = $referenceImage->getFullPath();
+		$testedFilename = str_replace($this->reference->Name, $this->image->Name, $referenceFilename);
 
+		$this->assertNotEquals($testedFilename, $referenceFilename);
 		$this->assertFileEquals(
-			"$dir/_resampled/$method$args-$reference",
-			"$dir/_resampled/$method$args-$tested",
+			$referenceFilename,
+			$testedFilename,
 			'Reverting an image version re-applies all transforms already in place.'
 		);
 	}
