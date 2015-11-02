@@ -11,7 +11,15 @@ class VersionedImageExtension extends DataExtension {
 	 * Regenerates all cached images if the version number has been changed.
 	 */
 	public function onBeforeWrite() {
-		if(!$this->owner->isChanged('CurrentVersionID')) return;
+		if(!$this->owner->isChanged('CurrentVersionID')) {
+			return;
+		}
+
+		// Support new {@see Image::regenerateFormattedImages} method in 3.2
+		if($this->owner->hasMethod('regenerateFormattedImages')) {
+			$this->owner->regenerateFormattedImages();
+			return;
+		}
 
 		if($this->owner->ParentID) {
 			$base = $this->owner->Parent()->getFullPath();
@@ -19,7 +27,10 @@ class VersionedImageExtension extends DataExtension {
 			$base = ASSETS_PATH . '/';
 		}
 
-		if(!is_dir($resampled = "{$base}_resampled")) return;
+		$resampled = "{$base}_resampled";
+		if(!is_dir($resampled)) {
+			return;
+		}
 
 		$files    = scandir($resampled);
 		$iterator = new ArrayIterator($files);
