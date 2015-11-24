@@ -3,170 +3,174 @@
  * @package    silverstripe-versionedfiles
  * @subpackage tests
  */
-class VersionedFileTest extends FunctionalTest {
+class VersionedFileTest extends FunctionalTest
+{
+    protected $usesDatabase = true;
 
-	protected $usesDatabase = true;
+    /**
+     * @var Folder
+     */
+    protected $folder;
 
-	/**
-	 * @var Folder
-	 */
-	protected $folder;
+    /**
+     * @var File
+     */
+    protected $file;
 
-	/**
-	 * @var File
-	 */
-	protected $file;
+    public function setUp()
+    {
+        parent::setUp();
 
-	public function setUp() {
-		parent::setUp();
+        $this->folder = Folder::find_or_make(ASSETS_DIR . '/versionedfiles-test');
 
-		$this->folder = Folder::find_or_make(ASSETS_DIR . '/versionedfiles-test');
+        $file = $this->folder->getFullPath() . 'test-file.txt';
+        file_put_contents($file, 'first-version');
 
-		$file = $this->folder->getFullPath() . 'test-file.txt';
-		file_put_contents($file, 'first-version');
+        $this->file = new File();
+        $this->file->ParentID = $this->folder->ID;
+        $this->file->Filename = $this->folder->getFilename() . 'test-file.txt';
+        $this->file->write();
 
-		$this->file = new File();
-		$this->file->ParentID = $this->folder->ID;
-		$this->file->Filename = $this->folder->getFilename() . 'test-file.txt';
-		$this->file->write();
+        SecurityToken::disable();
+    }
 
-		SecurityToken::disable();
-	}
+    public function tearDown()
+    {
+        SecurityToken::enable();
 
-	public function tearDown() {
-		SecurityToken::enable();
+        $this->folder->deleteDatabaseOnly();
+        Filesystem::removeFolder($this->folder->getFullPath());
 
-		$this->folder->deleteDatabaseOnly();
-		Filesystem::removeFolder($this->folder->getFullPath());
+        parent::tearDown();
+    }
 
-		parent::tearDown();
-	}
+    public function testInitialSaveCreatesVersion()
+    {
+        $this->assertNull(
+            $this->folder->CurrentVersionID,
+            'Folders do not have versions created.'
+        );
 
-	public function testInitialSaveCreatesVersion() {
-		$this->assertNull(
-			$this->folder->CurrentVersionID,
-			'Folders do not have versions created.'
-		);
+        $this->assertEquals(
+            1, $this->file->getVersionNumber(),
+            'Files have initial versions vreated.'
+        );
 
-		$this->assertEquals(
-			1, $this->file->getVersionNumber(),
-			'Files have initial versions vreated.'
-		);
+        $this->assertEquals(
+            'first-version',
+            file_get_contents($this->file->CurrentVersion()->getFullPath()),
+            'Files are copied to a stored version directory.'
+        );
+    }
 
-		$this->assertEquals(
-			'first-version',
-			file_get_contents($this->file->CurrentVersion()->getFullPath()),
-			'Files are copied to a stored version directory.'
-		);
-	}
+    public function testNewVersionIncrementsVersionNumber()
+    {
+        file_put_contents($this->file->getFullPath(), 'second-version');
+        $this->file->createVersion();
+        $this->assertEquals(
+            2, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber(),
+            'The version number has incremented.'
+        );
 
-	public function testNewVersionIncrementsVersionNumber() {
-		file_put_contents($this->file->getFullPath(), 'second-version');
-		$this->file->createVersion();
-		$this->assertEquals(
-			2, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber(),
-			'The version number has incremented.'
-		);
+        file_put_contents($this->file->getFullPath(), 'third-version');
+        $this->file->createVersion();
+        $this->assertEquals(
+            3, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber(),
+            'The version number has incremented.'
+        );
+    }
 
-		file_put_contents($this->file->getFullPath(), 'third-version');
-		$this->file->createVersion();
-		$this->assertEquals(
-			3, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber(),
-			'The version number has incremented.'
-		);
-	}
+    public function testRollbackReplacesFile()
+    {
+        file_put_contents($this->file->getFullPath(), 'second-version');
+        $this->file->createVersion();
 
-	public function testRollbackReplacesFile() {
-		file_put_contents($this->file->getFullPath(), 'second-version');
-		$this->file->createVersion();
+        $this->logInWithPermission('ADMIN');
+        $this->getFileEditForm();
 
-		$this->logInWithPermission('ADMIN');
-		$this->getFileEditForm();
+        $this->assertEquals(
+            'second-version',
+            file_get_contents($this->file->CurrentVersion()->getFullPath())
+        );
 
-		$this->assertEquals(
-			'second-version',
-			file_get_contents($this->file->CurrentVersion()->getFullPath())
-		);
+        $form = $this->mainSession->lastPage()->getFormById('Form_ItemEditForm');
+        $url  = Director::makeRelative($form->getAction()->asString());
+        $data = array();
 
-		$form = $this->mainSession->lastPage()->getFormById('Form_ItemEditForm');
-		$url  = Director::makeRelative($form->getAction()->asString());
-		$data = array();
+        foreach ($form->_widgets as $widget) {
+            $data[$widget->getName()] = $widget->getValue();
+        }
 
-		foreach($form->_widgets as $widget) {
-			$data[$widget->getName()] = $widget->getValue();
-		}
+        $this->post($url, array_merge($data, array(
+            'Replace'         => 'rollback',
+            'PreviousVersion' => 1,
+            'ReplacementFile' => array(),
+        )));
 
-		$this->post($url, array_merge($data, array (
-			'Replace'         => 'rollback',
-			'PreviousVersion' => 1,
-			'ReplacementFile' => array(),
-		)));
+        $this->assertEquals(
+            'first-version', file_get_contents($this->file->getFullPath())
+        );
+        $this->assertEquals(
+            1, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber()
+        );
+    }
 
-		$this->assertEquals(
-			'first-version', file_get_contents($this->file->getFullPath())
-		);
-		$this->assertEquals(
-			1, DataObject::get_by_id('File', $this->file->ID)->getVersionNumber()
-		);
-	}
+    /**
+     * We need to test that the _versions folder isn't completed wiped by
+     * {@link VersionedFileExtension::onBeforeDelete()} when there is more than the file currently being deleted.
+     */
+    public function testOnBeforeDelete()
+    {
+        // Create the second file
+        $file2 = $this->folder->getFullPath() . 'test-file2.txt';
+        file_put_contents($file2, 'first-version');
 
-	/**
-	 * We need to test that the _versions folder isn't completed wiped by
-	 * {@link VersionedFileExtension::onBeforeDelete()} when there is more than the file currently being deleted.
-	 */
-	public function testOnBeforeDelete() {
-		// Create the second file
-		$file2 = $this->folder->getFullPath() . 'test-file2.txt';
-		file_put_contents($file2, 'first-version');
+        $file2Obj = new File();
+        $file2Obj->ParentID = $this->folder->ID;
+        $file2Obj->Filename = $this->folder->getFilename() . 'test-file2.txt';
+        $file2Obj->write();
 
-		$file2Obj = new File();
-		$file2Obj->ParentID = $this->folder->ID;
-		$file2Obj->Filename = $this->folder->getFilename() . 'test-file2.txt';
-		$file2Obj->write();
+        // Create a second version of the second file
+        file_put_contents($file2Obj->getFullPath(), 'second-version');
+        $file2Obj->createVersion();
 
-		// Create a second version of the second file
-		file_put_contents($file2Obj->getFullPath(), 'second-version');
-		$file2Obj->createVersion();
+        // Delete the second file
+        $file2Obj->delete();
 
-		// Delete the second file
-		$file2Obj->delete();
+        // Ensure the _versions folder still exists
+        $this->assertTrue(is_dir($this->folder->getFullPath()));
+        $this->assertTrue(is_dir($this->folder->getFullPath() . '/_versions'));
 
-		// Ensure the _versions folder still exists
-		$this->assertTrue(is_dir($this->folder->getFullPath()));
-		$this->assertTrue(is_dir($this->folder->getFullPath() . '/_versions'));
+        // Now delete the first file, and ensure the _versions folder no longer exists
+        $this->file->delete();
 
-		// Now delete the first file, and ensure the _versions folder no longer exists
-		$this->file->delete();
+        $this->assertTrue(is_dir($this->folder->getFullPath()));
+        $this->assertFalse(is_dir($this->folder->getFullPath() . '/_versions'));
 
-		$this->assertTrue(is_dir($this->folder->getFullPath()));
-		$this->assertFalse(is_dir($this->folder->getFullPath() . '/_versions'));
+        // Now create another file to ensure that the _versions folder can be successfully re-created
+        $file3 = $this->folder->getFullPath() . 'test-file3.txt';
+        file_put_contents($file3, 'first-version');
 
-		// Now create another file to ensure that the _versions folder can be successfully re-created
-		$file3 = $this->folder->getFullPath() . 'test-file3.txt';
-		file_put_contents($file3, 'first-version');
+        $file3Obj = new File();
+        $file3Obj->ParentID = $this->folder->ID;
+        $file3Obj->Filename = $this->folder->getFilename() . 'test-file3.txt';
+        $file3Obj->write();
 
-		$file3Obj = new File();
-		$file3Obj->ParentID = $this->folder->ID;
-		$file3Obj->Filename = $this->folder->getFilename() . 'test-file3.txt';
-		$file3Obj->write();
+        $this->assertTrue(is_file($file3Obj->getFullPath()));
+        $this->assertTrue(is_dir($this->folder->getFullPath() . '/_versions'));
+    }
 
-		$this->assertTrue(is_file($file3Obj->getFullPath()));
-		$this->assertTrue(is_dir($this->folder->getFullPath() . '/_versions'));
-	}
+    protected function getFileEditForm()
+    {
+        $admin  = new AssetAdmin();
+        $folder = Controller::join_links(
+            $admin->Link(), 'show', $this->folder->ID
+        );
+        $file = Controller::join_links(
+            $admin->Link(), 'EditForm/field/File/item', $this->file->ID, 'edit'
+        );
 
-	protected function getFileEditForm() {
-
-		$admin  = new AssetAdmin();
-		$folder = Controller::join_links(
-			$admin->Link(), 'show', $this->folder->ID
-		);
-		$file = Controller::join_links(
-			$admin->Link(), 'EditForm/field/File/item', $this->file->ID, 'edit'
-		);
-
-		$this->get($folder);
-		$this->get($file);
-
-	}
-
+        $this->get($folder);
+        $this->get($file);
+    }
 }
