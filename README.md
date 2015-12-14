@@ -9,11 +9,7 @@ Maintainer Contacts
 
 Requirements
 ------------
-* SilverStripe 3.0 +
-
-Documentation
--------------
-[GitHub Wiki](http://wiki.github.com/ajshort/silverstripe-versionedfiles)
+* SilverStripe 3.1 +
 
 Installation Instructions
 -------------------------
@@ -22,18 +18,10 @@ Installation Instructions
 2. Visit yoursite.com/dev/build to rebuild the database.
 3. Visit yoursite.com/dev/tasks/FileVersionCreationTask - this creates initial
    versions for any existing files.
-
-Usage Overview
---------------
-When you view a file in the Files & Images section of the CMS, you will notice
-that two tabs have been added - "History" and "Replace".
-
-The History tab contains a listing of all versions of the file, complete with
-links. You can replace the file with an upload from your computer in the replace
-tab.
-
-Once you have created more than one version of a file, you have the option to
-rollback to a specific version in the Replace tab.
+   
+Documentation
+-------------
+[User guide](docs/en/user-guide.md)
 
 Known Issues
 ------------
