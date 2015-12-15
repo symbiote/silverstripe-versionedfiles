@@ -21,7 +21,7 @@ Installation Instructions
    
 Documentation
 -------------
-[User guide](docs/en/user-guide.md)
+[User guide](docs/en/userguide/index.md)
 
 Known Issues
 ------------
