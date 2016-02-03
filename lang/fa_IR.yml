@@ -1,0 +1,11 @@
+fa_IR:
+  AssetUploadField:
+    DROPAREA: 'محل انداختن'
+    FILES: فایل‌ها
+    FROMCOMPUTERINFO: 'بارگذاری از کامپیوتر شما'
+    UPLOADINPROGRESS: 'لطفاً صبر کنید... بارگذاری در جریان است'
+    UPLOADOR: یا
+  UploadField:
+    FIELDNOTSET: 'اطلاعات فایل پیدا نشد'
+  VersionedFiles:
+    DATE: تاریخ
