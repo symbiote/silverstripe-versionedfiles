@@ -7,7 +7,7 @@ summary: Versioning and rollback functionality for images and files in the CMS.
 
 Make sure that your SilverStripe CMS installation has the [Versioned Files](https://addons.silverstripe.org/add-ons/silverstripe/versionedfiles/) module installed.
 
-# Usage
+## Usage
 
 When you view a file in the Files & Images section of the CMS, you will notice
 that two tabs have been added - "History" and "Replace".
