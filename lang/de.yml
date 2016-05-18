@@ -11,6 +11,7 @@ de:
     SINGULARNAME: 'Dateiversion'
   FileVersionCreationTask:
     Created: '{count} Dateiversionseinträge erstellt.'
+    Desc: 'Erzeuge einen Versionseintrag for Dateien, für die noch kein Versionseintrag exist.'
     NoCreated: 'Keine Dateiversionseinträge erstellt.'
     Title: 'Dateiversionserstellungsaufgabe'
   UploadField:
@@ -29,5 +30,6 @@ de:
     ISCURRENT: 'Ist aktuell'
     LINK: Link
     ROLLBACKPREVVERSION: 'Auf eine vorherige Version zurücksetzen'
+    SAMETYPEMESSAGE: 'Sie können Dateien über ein Muster auswählen: .%s'
     SELECTAVERSION: '(Wählen Sie eine Version aus)'
     VERSIONNUMBER: 'Versionsnummer'
