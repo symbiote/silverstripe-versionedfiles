@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.9]
+
+* Update translations
+
 ## [1.0.8]
 
 * DOCS Added a user guide and update the readme
@@ -12,7 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Updated translations
 * Converted to PSR-2
 * Update copyright flag
-* Added standard Scrutinizer config	
+* Added standard Scrutinizer config
 * Added standard code of conduct
 * Added standard editor config
 * Added standard license
