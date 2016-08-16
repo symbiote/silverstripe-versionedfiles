@@ -1,0 +1,35 @@
+hr:
+  AssetUploadField:
+    DROPAREA: 'Područje ubacivanja'
+    FILES: Datoteke
+    FROMCOMPUTERINFO: 'Uploadajte sa svog računala'
+    TOTAL: Ukupno
+    UPLOADINPROGRESS: 'Molim pričekajte... upload u tijeku'
+    UPLOADOR: ILI
+  FileVersion:
+    PLURALNAME: 'Verzije datoteka'
+    SINGULARNAME: 'Verzija datoteke'
+  FileVersionCreationTask:
+    Created: 'Kreirano {count} zapisa verzija datoteka.'
+    Desc: 'Kreira verzije zapisa za datotekae koje nemaju niti jedan.'
+    NoCreated: 'Verzije zapisa datoteka nisu kreirane.'
+    Title: 'Zadatak kreiranja verzija datoteka'
+  UploadField:
+    FIELDNOTSET: 'Nisu pronađeni podaci o datoteci'
+    MAXNUMBEROFFILES: 'Maksimalan broj od {count} datoteke(a) popunjen.'
+  VerionedFiles:
+    DRAGFILEHERE: 'Povucite datoteke ovdje'
+    TOUPLOAD: 'Odaberite datoteke za upload...'
+    UPLOADNEWFILE: 'Uploadajte novu datoteku'
+  VersionNumber:
+    VERSIONNUM: 'Verzije %d'
+  VersionedFiles:
+    CREATOR: Tvorac
+    CURRENTVERSION: 'Trenutna verzija'
+    DATE: Datum
+    ISCURRENT: 'Je trenutno'
+    LINK: Link
+    ROLLBACKPREVVERSION: 'Vrati na prethodnu verziju'
+    SAMETYPEMESSAGE: 'Možete zamijeniti ovu datoteku samo s drugom istog tipa: .%s'
+    SELECTAVERSION: '(odaberite verziju)'
+    VERSIONNUMBER: 'Broj verzije'
