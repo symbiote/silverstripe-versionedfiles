@@ -1,9 +1,9 @@
 ar:
   AssetUploadField:
     DROPAREA: 'منطقة الإسقاط'
-    FILES: الملفات
+    FILES: 'الملفات'
     FROMCOMPUTERINFO: 'تحميل من الكمبيوتر الخاص بك'
-    TOTAL: المجموع
+    TOTAL: 'المجموع'
     UPLOADINPROGRESS: 'يرجى الانتظار ... عملية الإيداع في تقدم'
     UPLOADOR: أو
   FileVersion:
@@ -24,7 +24,7 @@ ar:
   VersionNumber:
     VERSIONNUM: 'النسخة %d'
   VersionedFiles:
-    CREATOR: المستحدث
+    CREATOR: 'المستحدث'
     CURRENTVERSION: 'النسخة الحالية'
     DATE: التاريخ
     ISCURRENT: 'هو الحالي'

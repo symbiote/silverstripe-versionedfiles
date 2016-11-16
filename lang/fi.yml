@@ -1,14 +1,14 @@
 fi:
   AssetUploadField:
-    DROPAREA: 'Pudotusalue'
+    DROPAREA: Pudotusalue
     FILES: Tiedostot
     FROMCOMPUTERINFO: 'Siirrä omalta laitteelta'
     TOTAL: Yhteensä
     UPLOADINPROGRESS: 'Odota... tiedoston siirto käynnissä'
     UPLOADOR: TAI
   FileVersion:
-    PLURALNAME: 'Tiedostoversiot'
-    SINGULARNAME: 'Tiedostoversio'
+    PLURALNAME: Tiedostoversiot
+    SINGULARNAME: Tiedostoversio
   FileVersionCreationTask:
     Created: 'Luotiin {count} tiedostoversiota'
     Desc: 'Luo versiot tiedostoista, joissa versiointia ei ole.'
@@ -32,4 +32,4 @@ fi:
     ROLLBACKPREVVERSION: 'Palaa edelliseen versioon'
     SAMETYPEMESSAGE: 'Voit ylikirjoittaa tämän tiedoston vain vastaavassa formaatissa: .%s'
     SELECTAVERSION: '(Valitse versio)'
-    VERSIONNUMBER: 'Versionumero'
+    VERSIONNUMBER: Versionumero

@@ -1,19 +1,19 @@
 de:
   AssetUploadField:
-    DROPAREA: 'Ablegebereich'
+    DROPAREA: Ablegebereich
     FILES: Dateien
     FROMCOMPUTERINFO: 'Von Ihrem Computer hochladen'
     TOTAL: Insgesamt
     UPLOADINPROGRESS: 'Bitte warten… Hochladen läuft'
     UPLOADOR: ODER
   FileVersion:
-    PLURALNAME: 'Dateiversionen'
-    SINGULARNAME: 'Dateiversion'
+    PLURALNAME: Dateiversionen
+    SINGULARNAME: Dateiversion
   FileVersionCreationTask:
     Created: '{count} Dateiversionseinträge erstellt.'
     Desc: 'Erzeuge einen Versionseintrag for Dateien, für die noch kein Versionseintrag exist.'
     NoCreated: 'Keine Dateiversionseinträge erstellt.'
-    Title: 'Dateiversionserstellungsaufgabe'
+    Title: Dateiversionserstellungsaufgabe
   UploadField:
     FIELDNOTSET: 'Dateiinformationen nicht gefunden'
     MAXNUMBEROFFILES: 'Maximale Anzahl von {count} Datei(en) überschritten.'
@@ -32,4 +32,4 @@ de:
     ROLLBACKPREVVERSION: 'Auf eine vorherige Version zurücksetzen'
     SAMETYPEMESSAGE: 'Sie können Dateien über ein Muster auswählen: .%s'
     SELECTAVERSION: '(Wählen Sie eine Version aus)'
-    VERSIONNUMBER: 'Versionsnummer'
+    VERSIONNUMBER: Versionsnummer

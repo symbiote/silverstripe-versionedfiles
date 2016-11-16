@@ -1,7 +1,7 @@
 mi:
   AssetUploadField:
     DROPAREA: 'Wāhi Taka'
-    FILES: Ngā Kōnae
+    FILES: 'Ngā Kōnae'
     FROMCOMPUTERINFO: 'Tukuatu  i tō rorohiko'
     TOTAL: Tapeke
     UPLOADINPROGRESS: 'Taihoa...he tukuatu kei te haere'

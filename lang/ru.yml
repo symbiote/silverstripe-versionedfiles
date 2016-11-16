@@ -1,0 +1,35 @@
+ru:
+  AssetUploadField:
+    DROPAREA: 'Перетащите сюда'
+    FILES: Файлы
+    FROMCOMPUTERINFO: 'Загрузить с вашего компьютера'
+    TOTAL: Всего
+    UPLOADINPROGRESS: 'Идет загрузка... Пожалуйста, подождите'
+    UPLOADOR: или
+  FileVersion:
+    PLURALNAME: 'Версии файла'
+    SINGULARNAME: 'Верия файла'
+  FileVersionCreationTask:
+    Created: 'Создано {count} версий файла.'
+    Desc: 'Создаёт записи версий файлов у которых нет ни одной версии.'
+    NoCreated: 'Ни одной записи версий файлов не было создано.'
+    Title: 'Создать версии файлов'
+  UploadField:
+    FIELDNOTSET: 'Информация о файле не найдена'
+    MAXNUMBEROFFILES: 'Превышено максимальное количество в {count} файл(ов).'
+  VerionedFiles:
+    DRAGFILEHERE: 'Перетащите файл сюда'
+    TOUPLOAD: 'Выберите файл для загрузки...'
+    UPLOADNEWFILE: 'Загрузить новый файл'
+  VersionNumber:
+    VERSIONNUM: 'Версия %d'
+  VersionedFiles:
+    CREATOR: Автор
+    CURRENTVERSION: 'Текущая версия'
+    DATE: Дата
+    ISCURRENT: Текущий
+    LINK: Ссылка
+    ROLLBACKPREVVERSION: 'Вернуться к предыдущей версии'
+    SAMETYPEMESSAGE: 'Вы можете заменить этот файл другим того же типа: %s'
+    SELECTAVERSION: '(Выберите версию)'
+    VERSIONNUMBER: 'Номер Версии'
