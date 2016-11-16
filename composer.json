@@ -1,22 +1,20 @@
 {
-	"name": "silverstripe/versionedfiles",
-	"description": "Add versioning to files",
-	"type": "silverstripe-module",
-	"keywords": ["silverstripe"],
-	"license": "BSD-3-Clause",
-	"authors": [
-		{
-			"name": "Andrew Short",
-			"email": "andrewjshort@gmail.com"
-		}
-	],
-	"require": {
-		"silverstripe/framework": "~3.1",
-		"silverstripe/cms": "~3.1"
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "1.0.x-dev"
-		}
-	}
+    "name": "silverstripe/versionedfiles",
+    "description": "Add versioning to files",
+    "type": "silverstripe-module",
+    "keywords": [
+        "silverstripe"
+    ],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Andrew Short",
+            "email": "andrewjshort@gmail.com"
+        }
+    ],
+    "require": {
+        "silverstripe/framework": "~3.1",
+        "silverstripe/cms": "~3.1"
+    },
+    "extra": []
 }
