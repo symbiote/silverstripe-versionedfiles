@@ -111,9 +111,11 @@ class FileVersion extends DataObject
      */
     protected function saveCurrentVersion()
     {
-        if ($this->File()->ParentID) {
+        // Ensure we re-fetch fresh record from database (in case it was recently renamed / moved)
+        $file = File::get()->byID($this->FileID);
+        if ($file->ParentID) {
             $base = Controller::join_links(
-                $this->File()->Parent()->getFullPath(),
+                $file->Parent()->getFullPath(),
                 self::VERSION_FOLDER,
                 $this->FileID
             );
@@ -128,15 +130,15 @@ class FileVersion extends DataObject
 
         Filesystem::makeFolder($base);
 
-        $extension = $this->File()->getExtension();
-        $basename  = basename($this->File()->Name, $extension);
+        $extension = $file->getExtension();
+        $basename  = basename($file->Name, $extension);
         $version   = $this->VersionNumber;
 
         $cachedPath = Controller::join_links(
             $base, "{$basename}$version.$extension"
         );
 
-        if (!copy($this->File()->getFullPath(), $cachedPath)) {
+        if (!copy($file->getFullPath(), $cachedPath)) {
             throw new Exception(
                 "Unable to save version #$version of file #$this->FileID."
             );
