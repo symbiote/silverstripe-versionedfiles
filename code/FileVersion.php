@@ -140,7 +140,7 @@ class FileVersion extends DataObject
 
         if (!copy($file->getFullPath(), $cachedPath)) {
             throw new Exception(
-                "Unable to save version #$version of file #$this->FileID."
+                "Unable to copy version #$version of file #$this->FileID from:\n \"{$file->getFullPath()}\"\nto:\n\"$cachedPath\""
             );
         }
 
