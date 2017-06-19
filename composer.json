@@ -1,5 +1,5 @@
 {
-    "name": "silverstripe/versionedfiles",
+    "name": "symbiote/silverstripe-versionedfiles",
     "description": "Add versioning to files",
     "type": "silverstripe-module",
     "keywords": [
@@ -18,7 +18,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "2.0.x-dev"
         }
     }
 }
