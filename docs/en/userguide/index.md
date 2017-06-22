@@ -5,7 +5,7 @@ summary: Versioning and rollback functionality for images and files in the CMS.
 
 ## Before we begin
 
-Make sure that your SilverStripe CMS installation has the [Versioned Files](https://addons.silverstripe.org/add-ons/silverstripe/versionedfiles/) module installed.
+Make sure that your SilverStripe CMS installation has the [Versioned Files](https://addons.silverstripe.org/add-ons/symbiote/silverstripe-versionedfiles/) module installed.
 
 ## Usage
 
