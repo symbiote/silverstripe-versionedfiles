@@ -1,7 +1,7 @@
 SilverStripe Versioned Files Module
 ===================================
 
-[![Build Status](https://travis-ci.org/silverstripe-australia/silverstripe-versionedfiles.svg?branch=master)](https://travis-ci.org/silverstripe-australia/silverstripe-versionedfiles)
+[![Build Status](https://travis-ci.org/symbiote/silverstripe-versionedfiles.svg?branch=master)](https://travis-ci.org/symbiote/silverstripe-versionedfiles)
 
 Requirements
 ------------
