@@ -17,6 +17,7 @@
         "silverstripe/cms": "~3.1"
     },
     "extra": {
+        "installer-name": "versionedfiles",
         "branch-alias": {
             "dev-master": "2.0.x-dev"
         }
