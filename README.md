@@ -2,6 +2,7 @@ SilverStripe Versioned Files Module
 ===================================
 
 [![Build Status](https://travis-ci.org/symbiote/silverstripe-versionedfiles.svg?branch=master)](https://travis-ci.org/symbiote/silverstripe-versionedfiles)
+[![SilverStripe supported module](https://img.shields.io/badge/silverstripe-supported-0071C4.svg)](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
 
 **IMPORTANT**: File versioning is [built-in](https://docs.silverstripe.org/en/4/developer_guides/files/file_management/#file-versioning) with SilverStripe 4.x. There is currently no migration path from this module.
 
