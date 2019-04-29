@@ -153,7 +153,9 @@ class VersionedFileExtension extends DataExtension
                     mkdir($newVersions, Config::inst()->get('Filesystem', 'folder_create_mask'), true);
                 }
 
-                rename($oldVersions, $newVersions);
+                if (!is_dir($newVersions)) {
+                    rename($oldVersions, $newVersions);
+                }
             }
 
             // Then update individual version records to point to the new

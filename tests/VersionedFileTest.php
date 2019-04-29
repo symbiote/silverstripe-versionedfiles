@@ -44,6 +44,47 @@ class VersionedFileTest extends FunctionalTest
         parent::tearDown();
     }
 
+    public function testMovingFileToAnotherDirectory()
+    {
+        $oldDir = '/OldDir/';
+        $newDir = '/NewDir/';
+
+        // Create a directory
+        $oldFolder = Folder::find_or_make($oldDir);
+
+        // Create a file
+        file_put_contents($oldFolder->getFullPath() . 'test-file.txt', 'first-content');
+        $oldFile = File::create();
+        $oldFile->ParentID = $oldFolder->ID;
+        $oldFile->Filename = $oldFolder->getFilename() . 'test-file.txt';
+        $oldFile->write();
+
+
+        // Create a new directory & move the file to the new directory
+        $newFolder = Folder::find_or_make($newDir);
+        $newFile = File::get()->byID($oldFile->ID);
+        $newFile->ParentID = $newFolder->ID;
+        $newFile->Filename = $newFolder->getFilename() . 'test-file.txt';
+        $newFile->write();
+
+        // Assert file exists in new directory
+        $this->assertTrue(is_file($newFile->getFullPath()));
+
+        // Delete files
+        $newFile->delete();
+        $oldFile->delete();
+
+        // Delete directories & files created in this test case
+        array_map('unlink', glob(BASE_PATH . '/'. ASSETS_DIR . $oldDir . '/*.*'));
+        if (is_dir($oldDir)) {
+            rmdir($oldDir);
+        }
+        array_map('unlink', glob(BASE_PATH . '/'. ASSETS_DIR . $newDir . '/*.*'));
+        if (is_dir($newDir)) {
+            rmdir($newDir);
+        }
+    }
+
     public function testInitialSaveCreatesVersion()
     {
         $this->assertNull(
