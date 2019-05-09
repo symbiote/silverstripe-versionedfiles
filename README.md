@@ -2,6 +2,7 @@ SilverStripe Versioned Files Module
 ===================================
 
 [![Build Status](https://travis-ci.org/symbiote/silverstripe-versionedfiles.svg?branch=master)](https://travis-ci.org/symbiote/silverstripe-versionedfiles)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/symbiote/silverstripe-versionedfiles/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/symbiote/silverstripe-versionedfiles/?branch=master)
 [![SilverStripe supported module](https://img.shields.io/badge/silverstripe-supported-0071C4.svg)](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
 
 **IMPORTANT**: File versioning is [built-in](https://docs.silverstripe.org/en/4/developer_guides/files/file_management/#file-versioning) with SilverStripe 4.x. There is currently no migration path from this module. Current file versions are handled by SilverStripe’s built-in upgrade tooling. Both past file metadata versions (in `FileVersion` table) and content versions (in `assets/_versions`) are retained, but they’re no longer accessible via the CMS UI. If required, those versions can be retrieved by a developer.
