@@ -1,5 +1,7 @@
+---
 title: Replacing images and files in the CMS
 summary: Versioning and rollback functionality for images and files in the CMS.
+---
 
 # Replacing images and files in the CMS
 
