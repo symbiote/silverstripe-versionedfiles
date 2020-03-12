@@ -5,7 +5,7 @@ SilverStripe Versioned Files Module
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/symbiote/silverstripe-versionedfiles/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/symbiote/silverstripe-versionedfiles/?branch=master)
 [![SilverStripe supported module](https://img.shields.io/badge/silverstripe-supported-0071C4.svg)](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
 
-# Upgrading to Silverstripe CMS 4
+## Upgrading to Silverstripe CMS 4
 
 This is a legacy module for Silverstripe CMS 3.
 
