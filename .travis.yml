@@ -1,8 +1,11 @@
 # See https://github.com/silverstripe/silverstripe-travis-support for setup details
 
-dist: trusty
+dist: xenial
 
 language: php
+
+services:
+  - mysql
 
 matrix:
   include:
@@ -15,6 +18,8 @@ matrix:
     - php: '7.2'
       env: DB=MYSQL CORE_RELEASE=3.7
     - php: '7.3'
+      env: DB=MYSQL CORE_RELEASE=3.7
+    - php: '7.4'
       env: DB=MYSQL CORE_RELEASE=3.7
 
 before_script:
